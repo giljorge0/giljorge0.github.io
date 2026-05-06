@@ -1,1192 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Brain</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<style>
-:root {
-  --bg:        #080b0f;
-  --surface:   #0d1117;
-  --surface2:  #161b22;
-  --border:    rgba(255,255,255,0.07);
-  --border2:   rgba(255,255,255,0.12);
-  --text:      #e6edf3;
-  --text-dim:  #7d8590;
-  --text-dimmer: #3d4450;
-  --accent:    #7DF9FF;
-  --accent2:   #FF6B9D;
-  --accent3:   #C8FF3E;
-  --gold:      #D4AF37;
-  --node-output: #7DF9FF;
-  --node-input:  #3d4450;
-  --ff-serif:  'EB Garamond', 'Cormorant Garamond', Georgia, serif;
-  --ff-display:'Cormorant Garamond', Georgia, serif;
-  --ff-mono:   'JetBrains Mono', 'Fira Code', monospace;
-  --nav-w:     220px;
-  --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gil Jorge — Digital Brain</title>
+  <meta name="description" content="Researcher, engineer, and builder. Explore my knowledge graph, notes, and intellectual profile." />
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
 
-html, body {
-  height: 100%; background: var(--bg); color: var(--text);
-  font-family: var(--ff-serif); font-size: 16px; overflow: hidden;
-}
+  <!-- D3 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" defer></script>
 
-/* ── Noise overlay ─────────────────────────────────────── */
-body::before {
-  content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  background-size: 150px; opacity: 0.4;
-}
-
-/* ── Layout ────────────────────────────────────────────── */
-#shell { display: flex; height: 100vh; width: 100vw; overflow: hidden; }
-
-/* ── Sidebar nav ───────────────────────────────────────── */
-#nav {
-  width: var(--nav-w); min-width: var(--nav-w); height: 100%;
-  background: var(--surface); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; padding: 0;
-  z-index: 10; position: relative;
-  transition: width var(--transition);
-}
-
-#nav-header {
-  padding: 28px 24px 20px;
-  border-bottom: 1px solid var(--border);
-}
-#nav-title {
-  font-family: var(--ff-display); font-size: 20px; font-weight: 300;
-  letter-spacing: 0.03em; color: var(--text); line-height: 1.2;
-  font-style: italic;
-}
-#nav-subtitle {
-  font-family: var(--ff-mono); font-size: 10px; color: var(--text-dim);
-  letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px;
-}
-
-#nav-links { flex: 1; padding: 16px 0; overflow-y: auto; }
-
-.nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 24px; cursor: pointer;
-  font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.05em;
-  color: var(--text-dim); text-transform: uppercase;
-  transition: all var(--transition); position: relative;
-  border: none; background: none; width: 100%; text-align: left;
-}
-.nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-.nav-item.active { color: var(--accent); }
-.nav-item.active::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 2px; background: var(--accent);
-}
-.nav-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: currentColor; opacity: 0.6; flex-shrink: 0;
-}
-.nav-item.active .nav-dot { background: var(--accent); opacity: 1; box-shadow: 0 0 8px var(--accent); }
-
-#nav-footer {
-  padding: 16px 24px;
-  border-top: 1px solid var(--border);
-  font-family: var(--ff-mono); font-size: 10px; color: var(--text-dimmer);
-}
-#nav-stats { line-height: 1.8; }
-.stat-line { display: flex; justify-content: space-between; }
-.stat-val { color: var(--text-dim); }
-
-/* ── Main content ──────────────────────────────────────── */
-#main { flex: 1; height: 100%; overflow: hidden; position: relative; }
-
-.panel {
-  position: absolute; inset: 0;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s ease;
-  overflow: hidden;
-}
-.panel.active { opacity: 1; pointer-events: all; }
-
-/* ── Graph panel ───────────────────────────────────────── */
-#panel-graph { background: var(--bg); }
-
-#graph-canvas { width: 100%; height: 100%; }
-
-#graph-controls {
-  position: absolute; top: 20px; right: 20px;
-  display: flex; flex-direction: column; gap: 8px; z-index: 5;
-}
-.graph-btn {
-  background: var(--surface); border: 1px solid var(--border2);
-  color: var(--text-dim); font-family: var(--ff-mono); font-size: 11px;
-  padding: 6px 12px; cursor: pointer; letter-spacing: 0.05em;
-  transition: all var(--transition);
-}
-.graph-btn:hover { color: var(--accent); border-color: var(--accent); }
-
-#graph-search {
-  position: absolute; top: 20px; left: 20px; z-index: 5;
-}
-#graph-search input {
-  background: var(--surface); border: 1px solid var(--border2);
-  color: var(--text); font-family: var(--ff-mono); font-size: 12px;
-  padding: 8px 14px; width: 220px; outline: none;
-  transition: border-color var(--transition);
-}
-#graph-search input:focus { border-color: var(--accent); }
-#graph-search input::placeholder { color: var(--text-dimmer); }
-
-#node-tooltip {
-  position: absolute; display: none; z-index: 20;
-  background: var(--surface2); border: 1px solid var(--border2);
-  padding: 12px 16px; max-width: 280px; pointer-events: none;
-}
-#node-tooltip .tt-title {
-  font-family: var(--ff-serif); font-size: 14px; font-weight: 500;
-  color: var(--text); margin-bottom: 4px;
-}
-#node-tooltip .tt-meta {
-  font-family: var(--ff-mono); font-size: 10px; color: var(--text-dim);
-  margin-bottom: 8px;
-}
-#node-tooltip .tt-snippet {
-  font-family: var(--ff-serif); font-size: 12px; color: var(--text-dim);
-  line-height: 1.5; font-style: italic;
-}
-
-#graph-legend {
-  position: absolute; bottom: 20px; left: 20px; z-index: 5;
-  font-family: var(--ff-mono); font-size: 10px; color: var(--text-dimmer);
-}
-.legend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-
-/* ── Notes panel ───────────────────────────────────────── */
-#panel-notes { display: flex; }
-
-#cat-sidebar {
-  width: 200px; min-width: 200px; height: 100%;
-  background: var(--surface); border-right: 1px solid var(--border);
-  overflow-y: auto; padding: 16px 0;
-}
-.cat-header {
-  padding: 6px 16px;
-  font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.15em;
-  text-transform: uppercase; color: var(--text-dimmer); margin-bottom: 4px;
-}
-.cat-item {
-  padding: 8px 16px; cursor: pointer;
-  font-family: var(--ff-mono); font-size: 11px; color: var(--text-dim);
-  transition: all var(--transition); display: flex; justify-content: space-between;
-  align-items: center; border: none; background: none; width: 100%; text-align: left;
-}
-.cat-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-.cat-item.active { color: var(--accent3); }
-.cat-count {
-  font-size: 9px; color: var(--text-dimmer);
-  background: var(--surface2); padding: 1px 5px; border-radius: 2px;
-}
-
-#notes-list {
-  width: 280px; min-width: 280px; height: 100%;
-  border-right: 1px solid var(--border); overflow-y: auto;
-  background: var(--surface);
-}
-#notes-list-inner { padding: 12px 0; }
-.note-card {
-  padding: 12px 16px; cursor: pointer;
-  border-bottom: 1px solid var(--border); transition: background var(--transition);
-}
-.note-card:hover { background: rgba(255,255,255,0.02); }
-.note-card.active { background: rgba(125,249,255,0.04); border-left: 2px solid var(--accent); }
-.nc-title {
-  font-family: var(--ff-serif); font-size: 13px; font-weight: 500;
-  color: var(--text); line-height: 1.3; margin-bottom: 4px;
-}
-.nc-meta {
-  font-family: var(--ff-mono); font-size: 9px; color: var(--text-dimmer);
-  display: flex; gap: 8px;
-}
-.nc-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
-.nc-tag {
-  font-family: var(--ff-mono); font-size: 9px; color: var(--text-dimmer);
-  border: 1px solid var(--border); padding: 1px 5px;
-}
-
-#note-reader {
-  flex: 1; height: 100%; overflow-y: auto;
-  padding: 48px 56px;
-}
-#note-empty {
-  display: flex; align-items: center; justify-content: center;
-  height: 100%; color: var(--text-dimmer); font-family: var(--ff-mono);
-  font-size: 12px; letter-spacing: 0.1em;
-}
-#note-content { max-width: 680px; }
-#note-content h1 {
-  font-family: var(--ff-display); font-size: 32px; font-weight: 300;
-  font-style: italic; color: var(--text); line-height: 1.2;
-  margin-bottom: 12px;
-}
-#note-content .note-meta-bar {
-  font-family: var(--ff-mono); font-size: 10px; color: var(--text-dim);
-  display: flex; gap: 16px; margin-bottom: 32px;
-  padding-bottom: 16px; border-bottom: 1px solid var(--border);
-}
-#note-content .note-body {
-  font-family: var(--ff-serif); font-size: 17px; line-height: 1.75;
-  color: var(--text); white-space: pre-wrap; font-weight: 400;
-}
-#note-content .note-tags-footer {
-  margin-top: 40px; padding-top: 20px;
-  border-top: 1px solid var(--border);
-  display: flex; flex-wrap: wrap; gap: 6px;
-}
-#note-content .note-tags-footer .tag {
-  font-family: var(--ff-mono); font-size: 10px; color: var(--accent3);
-  border: 1px solid rgba(200,255,62,0.2); padding: 3px 8px;
-}
-
-/* ── Wiki panel ────────────────────────────────────────── */
-#panel-wiki { display: flex; }
-
-#wiki-sidebar {
-  width: 240px; min-width: 240px; height: 100%;
-  background: var(--surface); border-right: 1px solid var(--border);
-  overflow-y: auto; padding: 16px 0;
-}
-#wiki-search-wrap { padding: 8px 16px 12px; }
-#wiki-search {
-  width: 100%; background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text); font-family: var(--ff-mono); font-size: 11px;
-  padding: 6px 10px; outline: none; transition: border-color var(--transition);
-}
-#wiki-search:focus { border-color: var(--accent); }
-.wiki-item {
-  padding: 8px 16px; cursor: pointer;
-  font-family: var(--ff-serif); font-size: 13px; color: var(--text-dim);
-  transition: all var(--transition); border: none; background: none;
-  width: 100%; text-align: left; display: flex; justify-content: space-between;
-}
-.wiki-item:hover { color: var(--text); background: rgba(255,255,255,0.02); }
-.wiki-item.active { color: var(--accent2); }
-.wiki-v { font-family: var(--ff-mono); font-size: 9px; color: var(--text-dimmer); }
-
-#wiki-reader {
-  flex: 1; height: 100%; overflow-y: auto; padding: 48px 56px;
-}
-#wiki-content { max-width: 720px; }
-#wiki-content h1 {
-  font-family: var(--ff-display); font-size: 36px; font-weight: 300;
-  font-style: italic; margin-bottom: 8px;
-}
-#wiki-content .wiki-meta {
-  font-family: var(--ff-mono); font-size: 10px; color: var(--text-dim);
-  margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
-  display: flex; gap: 20px;
-}
-#wiki-content .wiki-body {
-  font-family: var(--ff-serif); font-size: 17px; line-height: 1.8;
-  color: var(--text); white-space: pre-wrap;
-}
-#wiki-content .wiki-body h2 {
-  font-family: var(--ff-display); font-size: 22px; font-weight: 400;
-  font-style: italic; margin: 32px 0 12px; color: var(--text);
-}
-#wiki-content .related-chips {
-  margin-top: 48px; padding-top: 20px;
-  border-top: 1px solid var(--border);
-  display: flex; flex-wrap: wrap; gap: 8px;
-}
-#wiki-content .chip {
-  font-family: var(--ff-mono); font-size: 10px; color: var(--accent2);
-  border: 1px solid rgba(255,107,157,0.25); padding: 4px 10px;
-  cursor: pointer; transition: all var(--transition);
-}
-#wiki-content .chip:hover { background: rgba(255,107,157,0.1); }
-
-/* ── Persona panel ─────────────────────────────────────── */
-#panel-persona { overflow-y: auto; padding: 48px 64px; }
-
-#persona-inner { max-width: 860px; margin: 0 auto; }
-
-.persona-section { margin-bottom: 56px; }
-.ps-label {
-  font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--text-dim);
-  margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
-}
-.ps-label::after {
-  content: ''; flex: 1; height: 1px; background: var(--border);
-}
-
-#persona-self-desc {
-  font-family: var(--ff-display); font-size: 22px; font-weight: 300;
-  font-style: italic; line-height: 1.65; color: var(--text);
-  border-left: 2px solid var(--gold); padding-left: 24px;
-}
-
-#topics-chart { display: flex; flex-direction: column; gap: 8px; }
-.topic-row { display: flex; align-items: center; gap: 12px; }
-.topic-name {
-  font-family: var(--ff-mono); font-size: 11px; color: var(--text-dim);
-  width: 160px; text-align: right; flex-shrink: 0; text-overflow: ellipsis;
-  overflow: hidden; white-space: nowrap;
-}
-.topic-bar-wrap { flex: 1; height: 3px; background: var(--border); position: relative; }
-.topic-bar {
-  height: 100%; background: var(--accent);
-  transition: width 1s cubic-bezier(0.4,0,0.2,1);
-}
-.topic-count {
-  font-family: var(--ff-mono); font-size: 10px; color: var(--text-dimmer);
-  width: 36px; flex-shrink: 0;
-}
-
-#stances-grid { display: flex; flex-direction: column; gap: 20px; }
-.stance-card {
-  background: var(--surface2); border: 1px solid var(--border);
-  padding: 20px 24px;
-}
-.stance-topic {
-  font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--accent2); margin-bottom: 10px;
-}
-.stance-text {
-  font-family: var(--ff-serif); font-size: 16px; font-style: italic;
-  line-height: 1.6; color: var(--text);
-}
-
-#arc-table { width: 100%; border-collapse: collapse; }
-#arc-table th {
-  font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-dimmer);
-  text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border);
-}
-#arc-table td {
-  font-family: var(--ff-mono); font-size: 12px; color: var(--text-dim);
-  padding: 8px 12px; border-bottom: 1px solid var(--border);
-}
-#arc-table tr:hover td { color: var(--text); }
-.arc-year { color: var(--gold) !important; }
-
-/* ── Ask panel ─────────────────────────────────────────── */
-#panel-ask { display: flex; flex-direction: column; overflow: hidden; }
-
-#ask-header {
-  padding: 24px 32px 20px; border-bottom: 1px solid var(--border);
-  background: var(--surface); display: flex; align-items: center;
-  justify-content: space-between; flex-shrink: 0;
-}
-#ask-header-left h2 {
-  font-family: var(--ff-display); font-size: 22px; font-weight: 300;
-  font-style: italic; color: var(--text);
-}
-#ask-header-left p {
-  font-family: var(--ff-mono); font-size: 10px; color: var(--text-dim);
-  margin-top: 2px;
-}
-
-#key-toggle {
-  font-family: var(--ff-mono); font-size: 10px; color: var(--text-dim);
-  background: none; border: 1px solid var(--border); padding: 6px 12px;
-  cursor: pointer; transition: all var(--transition);
-}
-#key-toggle:hover { border-color: var(--accent); color: var(--accent); }
-
-#key-row {
-  display: none; padding: 12px 32px;
-  background: var(--surface2); border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-#key-row.visible { display: flex; gap: 12px; align-items: center; }
-#api-key-input {
-  flex: 1; background: var(--surface); border: 1px solid var(--border);
-  color: var(--text); font-family: var(--ff-mono); font-size: 12px;
-  padding: 8px 12px; outline: none;
-}
-#api-key-input:focus { border-color: var(--accent); }
-#save-key-btn {
-  background: rgba(125,249,255,0.08); border: 1px solid var(--accent);
-  color: var(--accent); font-family: var(--ff-mono); font-size: 11px;
-  padding: 8px 16px; cursor: pointer; transition: background var(--transition);
-}
-#save-key-btn:hover { background: rgba(125,249,255,0.15); }
-
-#chat-window { flex: 1; overflow-y: auto; padding: 24px 32px; }
-
-.msg-row { display: flex; gap: 16px; margin-bottom: 28px; animation: fadeUp 0.3s ease; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
-
-.msg-role {
-  font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--text-dimmer);
-  width: 56px; flex-shrink: 0; padding-top: 2px; text-align: right;
-}
-.msg-row.assistant .msg-role { color: var(--accent); }
-
-.msg-body {
-  flex: 1; font-family: var(--ff-serif); font-size: 16px;
-  line-height: 1.75; color: var(--text);
-}
-.msg-row.user .msg-body { color: var(--text-dim); font-style: italic; }
-
-.sources-block {
-  margin-top: 16px; padding: 12px 16px;
-  background: var(--surface2); border-left: 2px solid var(--accent);
-}
-.sources-label {
-  font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px;
-}
-.source-chip {
-  display: inline-block; font-family: var(--ff-mono); font-size: 10px;
-  color: var(--accent); border: 1px solid rgba(125,249,255,0.2);
-  padding: 2px 8px; margin: 2px; cursor: pointer;
-  transition: background var(--transition);
-}
-.source-chip:hover { background: rgba(125,249,255,0.08); }
-
-#thinking {
-  display: none; padding: 0 32px 16px;
-}
-#thinking.visible { display: flex; gap: 6px; align-items: center; }
-.dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); opacity: 0.4; animation: pulse 1.2s ease infinite; }
-.dot:nth-child(2) { animation-delay: 0.2s; }
-.dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes pulse { 0%,100%{opacity:0.2;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
-
-#ask-input-row {
-  padding: 16px 32px 24px; border-top: 1px solid var(--border);
-  background: var(--surface); display: flex; gap: 12px; flex-shrink: 0;
-}
-#ask-input {
-  flex: 1; background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text); font-family: var(--ff-serif); font-size: 16px;
-  padding: 12px 16px; outline: none; resize: none; height: 52px;
-  line-height: 1.4; transition: border-color var(--transition);
-}
-#ask-input:focus { border-color: var(--accent); }
-#ask-input::placeholder { color: var(--text-dimmer); font-style: italic; }
-#ask-submit {
-  background: rgba(125,249,255,0.08); border: 1px solid var(--accent);
-  color: var(--accent); font-family: var(--ff-mono); font-size: 12px;
-  letter-spacing: 0.08em; padding: 0 20px; cursor: pointer;
-  transition: background var(--transition); white-space: nowrap;
-}
-#ask-submit:hover { background: rgba(125,249,255,0.15); }
-#ask-submit:disabled { opacity: 0.4; cursor: default; }
-
-/* ── Loading screen ────────────────────────────────────── */
-#loading {
-  position: fixed; inset: 0; background: var(--bg);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; z-index: 1000;
-  transition: opacity 0.6s ease;
-}
-#loading.hide { opacity: 0; pointer-events: none; }
-#loading-title {
-  font-family: var(--ff-display); font-size: 36px; font-weight: 300;
-  font-style: italic; color: var(--text); margin-bottom: 8px;
-}
-#loading-sub {
-  font-family: var(--ff-mono); font-size: 11px; color: var(--text-dim);
-  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 40px;
-}
-#loading-bar-wrap { width: 200px; height: 1px; background: var(--border); }
-#loading-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; }
-#loading-status {
-  font-family: var(--ff-mono); font-size: 10px; color: var(--text-dimmer);
-  margin-top: 12px; letter-spacing: 0.05em;
-}
-
-/* ── Scrollbars ────────────────────────────────────────── */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-dimmer); }
-</style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- Loading -->
-<div id="loading">
-  <div id="loading-title">Digital Brain</div>
-  <div id="loading-sub">initialising memory</div>
-  <div id="loading-bar-wrap"><div id="loading-bar"></div></div>
-  <div id="loading-status">loading graph…</div>
-</div>
+  <!-- ── Navigation ───────────────────────────────────── -->
+  <header id="site-nav">
+    <a class="nav-brand" href="#about" data-view="about">GJ</a>
+    <nav class="nav-links" role="navigation">
+      <a href="#about"   data-view="about"   class="nav-link active">About</a>
+      <a href="#garden"  data-view="garden"  class="nav-link">Garden</a>
+      <a href="#brain"   data-view="brain"   class="nav-link nav-link--brain">Brain ✦</a>
+      <a href="#profile" data-view="profile" class="nav-link">Profile</a>
+    </nav>
+  </header>
 
-<!-- Shell -->
-<div id="shell" style="display:none">
+  <!-- ── Views ────────────────────────────────────────── -->
+  <main id="app">
 
-  <!-- Sidebar -->
-  <nav id="nav">
-    <div id="nav-header">
-      <div id="nav-title">Digital Brain</div>
-      <div id="nav-subtitle">knowledge graph</div>
-    </div>
-    <div id="nav-links">
-      <button class="nav-item active" data-panel="graph">
-        <span class="nav-dot"></span>Graph
-      </button>
-      <button class="nav-item" data-panel="notes">
-        <span class="nav-dot"></span>Notes
-      </button>
-      <button class="nav-item" data-panel="wiki">
-        <span class="nav-dot"></span>Wiki
-      </button>
-      <button class="nav-item" data-panel="persona">
-        <span class="nav-dot"></span>Persona
-      </button>
-      <button class="nav-item" data-panel="ask">
-        <span class="nav-dot"></span>Ask
-      </button>
-    </div>
-    <div id="nav-footer">
-      <div id="nav-stats"></div>
-    </div>
-  </nav>
+    <!-- About / Landing -->
+    <section id="view-about" class="view view--active" aria-label="About">
+      <div class="about-layout">
 
-  <!-- Main -->
-  <main id="main">
+        <div class="about-left">
+          <p class="about-eyebrow">
+            <span class="dot-pulse"></span>
+            Available for collaboration
+          </p>
+          <h1 class="about-name">
+            <span class="name-line">Gil</span>
+            <span class="name-line name-line--italic">Jorge</span>
+          </h1>
+          <p class="about-role">Researcher · Engineer · Builder</p>
+          <p class="about-bio">
+            I build systems at the intersection of knowledge, language, and intelligence.
+            My work focuses on neuro-symbolic memory architectures, epistemic systems,
+            and the philosophy of mind. This site is a live export of my digital brain —
+            the knowledge graph I use to think.
+          </p>
 
-    <!-- Graph -->
-    <div class="panel active" id="panel-graph">
-      <div id="graph-search"><input placeholder="search nodes…" id="graph-search-input"></div>
-      <div id="graph-controls">
-        <button class="graph-btn" id="btn-freeze">⏸ Freeze</button>
-        <button class="graph-btn" id="btn-reset">↺ Reset</button>
-        <button class="graph-btn" id="btn-output-only">◉ Mine only</button>
-      </div>
-      <svg id="graph-canvas"></svg>
-      <div id="node-tooltip">
-        <div class="tt-title" id="tt-title"></div>
-        <div class="tt-meta" id="tt-meta"></div>
-        <div class="tt-snippet" id="tt-snippet"></div>
-      </div>
-      <div id="graph-legend">
-        <div class="legend-row"><span class="legend-dot" style="background:var(--node-output)"></span>Your notes</div>
-        <div class="legend-row"><span class="legend-dot" style="background:var(--node-input)"></span>External input</div>
-        <div class="legend-row"><span class="legend-dot" style="background:var(--accent2)"></span>Wiki page</div>
-      </div>
-    </div>
-
-    <!-- Notes -->
-    <div class="panel" id="panel-notes">
-      <div id="cat-sidebar">
-        <div class="cat-header">Categories</div>
-        <div id="cat-list"></div>
-      </div>
-      <div id="notes-list">
-        <div id="notes-list-inner"></div>
-      </div>
-      <div id="note-reader">
-        <div id="note-empty">← select a note</div>
-        <div id="note-content" style="display:none"></div>
-      </div>
-    </div>
-
-    <!-- Wiki -->
-    <div class="panel" id="panel-wiki">
-      <div id="wiki-sidebar">
-        <div id="wiki-search-wrap">
-          <input id="wiki-search" placeholder="filter concepts…">
+          <div class="about-links">
+            <a href="https://github.com/giljorge0" class="link-pill" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              GitHub
+            </a>
+            <a href="https://linkedin.com/in/giljorge" class="link-pill" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              LinkedIn
+            </a>
+            <a href="mailto:gil@example.com" class="link-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+              Email
+            </a>
+            <a href="cv.pdf" class="link-pill link-pill--outline" download>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download CV
+            </a>
+          </div>
         </div>
-        <div id="wiki-list"></div>
-      </div>
-      <div id="wiki-reader">
-        <div id="wiki-content"></div>
-      </div>
-    </div>
 
-    <!-- Persona -->
-    <div class="panel" id="panel-persona">
-      <div id="persona-inner">
-        <div class="persona-section">
-          <div class="ps-label">Intellectual Identity</div>
-          <div id="persona-self-desc">Loading persona…</div>
-        </div>
-        <div class="persona-section">
-          <div class="ps-label">Topical Fingerprint</div>
-          <div id="topics-chart"></div>
-        </div>
-        <div class="persona-section">
-          <div class="ps-label">Stance Map</div>
-          <div id="stances-grid"></div>
-        </div>
-        <div class="persona-section">
-          <div class="ps-label">Temporal Arc</div>
-          <table id="arc-table">
-            <thead><tr><th>Year</th><th>Notes</th><th>Words</th><th>Dominant topic</th></tr></thead>
-            <tbody id="arc-body"></tbody>
-          </table>
+        <div class="about-right" aria-hidden="true">
+          <div class="about-counter" id="about-counter">
+            <div class="counter-item">
+              <span class="counter-val" id="cnt-notes">—</span>
+              <span class="counter-label">notes</span>
+            </div>
+            <div class="counter-item">
+              <span class="counter-val" id="cnt-words">—</span>
+              <span class="counter-label">words</span>
+            </div>
+            <div class="counter-item">
+              <span class="counter-val" id="cnt-edges">—</span>
+              <span class="counter-label">connections</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Ask -->
-    <div class="panel" id="panel-ask">
-      <div id="ask-header">
-        <div id="ask-header-left">
-          <h2>Ask My Brain</h2>
-          <p>Queries the corpus via the Anthropic API · your key stays in this browser</p>
+      <!-- Brain CTA -->
+      <div class="brain-cta-wrap">
+        <button class="brain-cta" data-view="brain" id="brain-cta-btn">
+          <span class="brain-cta-text">Enter My Digital Brain</span>
+          <span class="brain-cta-star">✦</span>
+          <svg class="brain-cta-ring" viewBox="0 0 300 60" preserveAspectRatio="none">
+            <rect class="ring-rect" x="2" y="2" width="296" height="56" rx="4"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Garden / Notes -->
+    <section id="view-garden" class="view" aria-label="Knowledge Garden">
+      <div class="section-header">
+        <h2 class="section-title">The Garden</h2>
+        <p class="section-sub" id="garden-count"></p>
+      </div>
+      <div class="garden-controls">
+        <input type="search" id="garden-search" class="search-input" placeholder="Search notes…" aria-label="Search notes" />
+        <div id="cat-filters" class="cat-filters" role="group" aria-label="Category filters"></div>
+      </div>
+      <div id="garden-grid" class="garden-grid"></div>
+    </section>
+
+    <!-- Brain Graph -->
+    <section id="view-brain" class="view view--graph" aria-label="Knowledge Graph">
+      <div id="graph-ui">
+        <div id="graph-header">
+          <span class="graph-title">Digital Brain</span>
+          <span class="graph-meta" id="graph-meta"></span>
         </div>
-        <button id="key-toggle">⚙ API key</button>
+        <div id="graph-search-wrap">
+          <input type="search" id="graph-search" placeholder="Search nodes…" aria-label="Search graph nodes" />
+        </div>
+        <div id="graph-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:var(--c-node-out)"></span>Your notes</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--c-node-in)"></span>External</span>
+        </div>
+        <div id="graph-controls">
+          <button class="graph-btn" id="btn-zoom-fit" title="Fit to screen">⊡ Fit</button>
+          <button class="graph-btn" id="btn-freeze" title="Freeze physics">⏸</button>
+          <button class="graph-btn" id="btn-mine" title="Show only my notes">◉ Mine</button>
+        </div>
       </div>
-      <div id="key-row">
-        <input id="api-key-input" type="password" placeholder="sk-ant-…">
-        <button id="save-key-btn">Save</button>
+      <svg id="graph-svg"></svg>
+      <div id="graph-tooltip" role="tooltip" aria-live="polite"></div>
+    </section>
+
+    <!-- Profile -->
+    <section id="view-profile" class="view" aria-label="Intellectual Profile">
+      <div class="section-header">
+        <h2 class="section-title">Intellectual Profile</h2>
+        <p class="section-sub" id="profile-date"></p>
       </div>
-      <div id="chat-window"></div>
-      <div id="thinking"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-      <div id="ask-input-row">
-        <textarea id="ask-input" placeholder="Ask anything about your notes…"></textarea>
-        <button id="ask-submit">Send →</button>
+      <div id="profile-inner">
+        <div class="profile-description" id="profile-desc"></div>
+        <div class="profile-grid">
+          <div class="profile-card profile-card--topics">
+            <h3 class="card-title">Topical Fingerprint</h3>
+            <div id="topics-chart"></div>
+          </div>
+          <div class="profile-card profile-card--stances">
+            <h3 class="card-title">Stance Map</h3>
+            <div id="stances-list"></div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
   </main>
-</div>
 
-<script>
-// ═══════════════════════════════════════════════════════════
-// DATA STATE
-// ═══════════════════════════════════════════════════════════
-const DATA = { graph: null, notes: null, wiki: null, persona: null };
-
-function setProgress(pct, status) {
-  document.getElementById('loading-bar').style.width = pct + '%';
-  document.getElementById('loading-status').textContent = status;
-}
-
-async function loadAll() {
-  try {
-    setProgress(10, 'loading graph…');
-    DATA.graph = await fetch('graph_data.json').then(r => r.json());
-    setProgress(35, 'loading notes…');
-    DATA.notes = await fetch('notes.json').then(r => r.json());
-    setProgress(60, 'loading wiki…');
-    DATA.wiki  = await fetch('wiki.json').then(r => r.json());
-    setProgress(80, 'loading persona…');
-    DATA.persona = await fetch('persona.json').then(r => r.json());
-    setProgress(100, 'ready');
-  } catch(e) {
-    console.warn('Some data files missing — using stubs', e);
-    DATA.graph   = DATA.graph   || { nodes:[], links:[] };
-    DATA.notes   = DATA.notes   || { categories:{}, total:0 };
-    DATA.wiki    = DATA.wiki    || { pages:[] };
-    DATA.persona = DATA.persona || {};
-    setProgress(100, 'ready (partial data)');
-  }
-
-  setTimeout(() => {
-    const el = document.getElementById('loading');
-    el.classList.add('hide');
-    setTimeout(() => el.remove(), 700);
-    document.getElementById('shell').style.display = 'flex';
-    init();
-  }, 400);
-}
-
-// ═══════════════════════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════════════════════
-function init() {
-  updateStats();
-  document.querySelectorAll('.nav-item').forEach(btn => {
-    btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
-  });
-  initGraph();
-  initNotes();
-  initWiki();
-  initPersona();
-  initAsk();
-}
-
-function switchPanel(name) {
-  document.querySelectorAll('.nav-item').forEach(b =>
-    b.classList.toggle('active', b.dataset.panel === name));
-  document.querySelectorAll('.panel').forEach(p =>
-    p.classList.toggle('active', p.id === 'panel-' + name));
-}
-
-function updateStats() {
-  const n = DATA.graph.nodes.length;
-  const e = DATA.graph.links.length;
-  const cats = Object.keys(DATA.notes.categories || {}).length;
-  const wiki = (DATA.wiki.pages || []).length;
-  document.getElementById('nav-stats').innerHTML = `
-    <div class="stat-line"><span>nodes</span><span class="stat-val">${n}</span></div>
-    <div class="stat-line"><span>edges</span><span class="stat-val">${e}</span></div>
-    <div class="stat-line"><span>categories</span><span class="stat-val">${cats}</span></div>
-    <div class="stat-line"><span>wiki pages</span><span class="stat-val">${wiki}</span></div>
-  `;
-}
-
-// ═══════════════════════════════════════════════════════════
-// GRAPH
-// ═══════════════════════════════════════════════════════════
-function initGraph() {
-  const container = document.getElementById('graph-canvas');
-  const { width, height } = container.getBoundingClientRect();
-  const W = width || 800, H = height || 600;
-
-  const svg = d3.select('#graph-canvas')
-    .attr('viewBox', `0 0 ${W} ${H}`)
-    .attr('preserveAspectRatio', 'xMidYMid meet');
-
-  const g = svg.append('g');
-
-  // Zoom
-  svg.call(d3.zoom().scaleExtent([0.1, 8])
-    .on('zoom', e => g.attr('transform', e.transform)));
-
-  const { nodes, links } = DATA.graph;
-  if (!nodes.length) return;
-
-  // Cluster colour palette
-  const clusterCols = ['#7DF9FF','#FF6B9D','#C8FF3E','#A78BFA','#F59E0B',
-    '#34D399','#F87171','#60A5FA','#FBBF24','#A3E635',
-    '#FB923C','#E879F9','#22D3EE','#4ADE80','#FB7185'];
-  const clusterColor = d => {
-    if (d.tags && d.tags.includes('wiki_page')) return '#FF6B9D';
-    if (d.role === 'output') return clusterCols[(d.cluster||0) % clusterCols.length];
-    return '#2a3040';
-  };
-  const nodeRadius = d => Math.max(3, Math.min(14, 3 + (d.centrality||0.001)*2000));
-
-  // Simulation
-  const sim = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d=>d.id).distance(d => d.type==='explicit' ? 60 : 100))
-    .force('charge', d3.forceManyBody().strength(-80))
-    .force('center', d3.forceCenter(W/2, H/2))
-    .force('collision', d3.forceCollide().radius(d=>nodeRadius(d)+2));
-
-  // Links
-  const link = g.append('g').selectAll('line').data(links).join('line')
-    .attr('stroke', d => ({
-      explicit:'rgba(125,249,255,0.3)', semantic:'rgba(255,107,157,0.2)',
-      tag:'rgba(200,255,62,0.15)', llm:'rgba(167,139,250,0.2)'
-    }[d.type] || 'rgba(255,255,255,0.08)'))
-    .attr('stroke-width', d => d.weight ? Math.min(d.weight*1.5, 2) : 0.5);
-
-  // Nodes
-  const node = g.append('g').selectAll('circle').data(nodes).join('circle')
-    .attr('r', nodeRadius)
-    .attr('fill', clusterColor)
-    .attr('stroke', d => d.role==='output' ? 'rgba(255,255,255,0.15)' : 'none')
-    .attr('stroke-width', 0.5)
-    .style('cursor','pointer')
-    .call(d3.drag()
-      .on('start', (e,d) => { if(!e.active) sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
-      .on('drag',  (e,d) => { d.fx=e.x; d.fy=e.y; })
-      .on('end',   (e,d) => { if(!e.active) sim.alphaTarget(0); d.fx=null; d.fy=null; })
-    );
-
-  // Tooltip
-  const tt = document.getElementById('node-tooltip');
-  node.on('mouseenter', (e,d) => {
-    document.getElementById('tt-title').textContent   = d.title;
-    document.getElementById('tt-meta').textContent    = `${d.role} · cluster ${d.cluster||0} · centrality ${(d.centrality||0).toFixed(4)}`;
-    document.getElementById('tt-snippet').textContent = d.snippet || '(no preview)';
-    tt.style.display = 'block';
-    tt.style.left = (e.pageX+12)+'px';
-    tt.style.top  = (e.pageY-40)+'px';
-  }).on('mousemove', e => {
-    tt.style.left=(e.pageX+12)+'px'; tt.style.top=(e.pageY-40)+'px';
-  }).on('mouseleave', () => { tt.style.display='none'; });
-
-  // Click → open note in notes panel
-  node.on('click', (e,d) => {
-    switchPanel('notes');
-    setTimeout(() => openNoteById(d.id), 50);
-  });
-
-  sim.on('tick', () => {
-    link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y)
-        .attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
-    node.attr('cx',d=>d.x).attr('cy',d=>d.y);
-  });
-
-  // Controls
-  let frozen = false;
-  document.getElementById('btn-freeze').onclick = () => {
-    frozen = !frozen;
-    frozen ? sim.stop() : sim.restart();
-    document.getElementById('btn-freeze').textContent = frozen ? '▶ Unfreeze' : '⏸ Freeze';
-  };
-  document.getElementById('btn-reset').onclick = () => {
-    svg.transition().duration(400).call(d3.zoom().transform, d3.zoomIdentity);
-  };
-  let outputOnly = false;
-  document.getElementById('btn-output-only').onclick = () => {
-    outputOnly = !outputOnly;
-    node.style('opacity', d => outputOnly && d.role!=='output' ? 0.05 : 1);
-    document.getElementById('btn-output-only').textContent =
-      outputOnly ? '◎ Show all' : '◉ Mine only';
-  };
-
-  // Search
-  document.getElementById('graph-search-input').addEventListener('input', e => {
-    const q = e.target.value.toLowerCase().trim();
-    node.attr('r', d => {
-      const match = q && (d.title.toLowerCase().includes(q) || (d.tags||[]).join(' ').includes(q));
-      return match ? nodeRadius(d)*2.5 : nodeRadius(d);
-    }).style('opacity', d => {
-      if (!q) return 1;
-      return (d.title.toLowerCase().includes(q) || (d.tags||[]).join(' ').includes(q)) ? 1 : 0.08;
-    });
-  });
-}
-
-// ═══════════════════════════════════════════════════════════
-// NOTES
-// ═══════════════════════════════════════════════════════════
-let allNotesList = [];
-let currentCat = null;
-
-function initNotes() {
-  const cats = DATA.notes.categories || {};
-  const catList = document.getElementById('cat-list');
-  allNotesList = Object.values(cats).flat();
-
-  Object.entries(cats).forEach(([cat, notes]) => {
-    const btn = document.createElement('button');
-    btn.className = 'cat-item';
-    btn.innerHTML = `<span>${cat}</span><span class="cat-count">${notes.length}</span>`;
-    btn.onclick = () => {
-      document.querySelectorAll('.cat-item').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      currentCat = cat;
-      renderNotesList(notes);
-    };
-    catList.appendChild(btn);
-  });
-
-  // Load first category automatically
-  const first = Object.keys(cats)[0];
-  if (first) {
-    catList.querySelector('.cat-item').classList.add('active');
-    renderNotesList(cats[first]);
-    currentCat = first;
-  }
-}
-
-function renderNotesList(notes) {
-  const inner = document.getElementById('notes-list-inner');
-  inner.innerHTML = '';
-  notes.forEach(note => {
-    const card = document.createElement('div');
-    card.className = 'note-card';
-    card.dataset.id = note.id;
-    card.innerHTML = `
-      <div class="nc-title">${esc(note.title)}</div>
-      <div class="nc-meta">
-        <span>${note.date || 'undated'}</span>
-        <span>${note.word_count} words</span>
-      </div>
-      <div class="nc-tags">${(note.tags||[]).slice(0,4).map(t=>`<span class="nc-tag">${esc(t)}</span>`).join('')}</div>
-    `;
-    card.onclick = () => openNote(note);
-    inner.appendChild(card);
-  });
-}
-
-function openNote(note) {
-  document.querySelectorAll('.note-card').forEach(c=>c.classList.remove('active'));
-  const card = document.querySelector(`.note-card[data-id="${note.id}"]`);
-  if (card) card.classList.add('active');
-
-  document.getElementById('note-empty').style.display = 'none';
-  const content = document.getElementById('note-content');
-  content.style.display = 'block';
-  content.innerHTML = `
-    <h1>${esc(note.title)}</h1>
-    <div class="note-meta-bar">
-      <span>${note.date || 'undated'}</span>
-      <span>${note.word_count} words</span>
-      <span>centrality ${note.centrality}</span>
+  <!-- Note reader overlay -->
+  <div id="note-reader" class="note-reader" role="dialog" aria-modal="true" aria-label="Note reader" hidden>
+    <div class="reader-header">
+      <button class="reader-back" id="reader-back" aria-label="Back to Garden">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Garden
+      </button>
+      <div class="reader-meta" id="reader-meta"></div>
     </div>
-    <div class="note-body">${esc(note.content)}</div>
-    <div class="note-tags-footer">${(note.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
-  `;
-}
+    <article class="reader-content">
+      <h1 class="reader-title" id="reader-title"></h1>
+      <div class="reader-body" id="reader-body"></div>
+    </article>
+  </div>
 
-function openNoteById(id) {
-  const note = allNotesList.find(n=>n.id===id);
-  if (!note) return;
-  // Switch to correct category
-  const cats = DATA.notes.categories || {};
-  const cat = Object.entries(cats).find(([,notes])=>notes.some(n=>n.id===id));
-  if (cat) {
-    document.querySelectorAll('.cat-item').forEach(b=>b.classList.remove('active'));
-    const catBtns = document.querySelectorAll('.cat-item');
-    const idx = Object.keys(cats).indexOf(cat[0]);
-    if (catBtns[idx]) { catBtns[idx].classList.add('active'); renderNotesList(cat[1]); }
-  }
-  setTimeout(() => openNote(note), 50);
-}
-
-// ═══════════════════════════════════════════════════════════
-// WIKI
-// ═══════════════════════════════════════════════════════════
-function initWiki() {
-  const pages = DATA.wiki.pages || [];
-  renderWikiList(pages);
-
-  document.getElementById('wiki-search').addEventListener('input', e => {
-    const q = e.target.value.toLowerCase();
-    renderWikiList(pages.filter(p => p.concept.toLowerCase().includes(q) ||
-                                     p.content.toLowerCase().includes(q)));
-  });
-
-  if (pages.length) openWikiPage(pages[0]);
-}
-
-function renderWikiList(pages) {
-  const list = document.getElementById('wiki-list');
-  list.innerHTML = '';
-  pages.forEach(page => {
-    const btn = document.createElement('button');
-    btn.className = 'wiki-item';
-    btn.dataset.id = page.id;
-    btn.innerHTML = `<span>${esc(page.concept)}</span><span class="wiki-v">v${page.version}</span>`;
-    btn.onclick = () => openWikiPage(page);
-    list.appendChild(btn);
-  });
-}
-
-function openWikiPage(page) {
-  document.querySelectorAll('.wiki-item').forEach(b=>b.classList.remove('active'));
-  const btn = document.querySelector(`.wiki-item[data-id="${page.id}"]`);
-  if (btn) btn.classList.add('active');
-
-  const related = (page.related||[]).map(r=>
-    `<span class="chip" onclick="findAndOpenWiki('${r}')">${esc(r)}</span>`).join('');
-
-  // Format wiki content: handle ## headings
-  const body = page.content.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-
-  document.getElementById('wiki-content').innerHTML = `
-    <h1>${esc(page.concept)}</h1>
-    <div class="wiki-meta">
-      <span>${page.date || ''}</span>
-      <span>v${page.version}</span>
-      <span>${page.sources} source notes</span>
-    </div>
-    <div class="wiki-body">${body}</div>
-    ${related ? `<div class="related-chips"><div class="sources-label">Related</div>${related}</div>` : ''}
-  `;
-}
-
-function findAndOpenWiki(concept) {
-  const page = (DATA.wiki.pages||[]).find(p=>p.concept.toLowerCase()===concept.toLowerCase());
-  if (page) openWikiPage(page);
-}
-
-// ═══════════════════════════════════════════════════════════
-// PERSONA
-// ═══════════════════════════════════════════════════════════
-function initPersona() {
-  const p = DATA.persona;
-  if (!p) return;
-
-  // Self-description
-  const desc = p.llm_self_description || '(run `python main.py persona build` to generate your intellectual profile)';
-  document.getElementById('persona-self-desc').textContent = desc;
-
-  // Topics chart
-  const topics = p.topical_fingerprint?.top_tags || {};
-  const maxCount = Math.max(...Object.values(topics), 1);
-  const chart = document.getElementById('topics-chart');
-  Object.entries(topics).slice(0,20).forEach(([tag,count]) => {
-    const pct = Math.round((count/maxCount)*100);
-    const row = document.createElement('div');
-    row.className = 'topic-row';
-    row.innerHTML = `
-      <div class="topic-name">${esc(tag)}</div>
-      <div class="topic-bar-wrap"><div class="topic-bar" style="width:${pct}%"></div></div>
-      <div class="topic-count">${count}</div>
-    `;
-    chart.appendChild(row);
-  });
-
-  // Stances
-  const stances = p.stance_map || {};
-  const grid = document.getElementById('stances-grid');
-  Object.entries(stances).forEach(([topic,stance]) => {
-    const card = document.createElement('div');
-    card.className = 'stance-card';
-    card.innerHTML = `
-      <div class="stance-topic">${esc(topic)}</div>
-      <div class="stance-text">${esc(stance)}</div>
-    `;
-    grid.appendChild(card);
-  });
-  if (!Object.keys(stances).length) {
-    grid.innerHTML = '<div style="font-family:var(--ff-mono);font-size:11px;color:var(--text-dimmer)">Run python main.py persona build to generate stance map</div>';
-  }
-
-  // Arc
-  const arc = p.temporal_arc || {};
-  const tbody = document.getElementById('arc-body');
-  Object.entries(arc).sort().forEach(([yr,data]) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="arc-year">${yr}</td>
-      <td>${data.note_count}</td>
-      <td>${(data.total_words||0).toLocaleString()}</td>
-      <td>${data.dominant_topic || '—'}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// ═══════════════════════════════════════════════════════════
-// ASK MY BRAIN  (Anthropic API — key lives in localStorage)
-// ═══════════════════════════════════════════════════════════
-function initAsk() {
-  const keyInput = document.getElementById('api-key-input');
-  const savedKey = localStorage.getItem('brain_api_key');
-  if (savedKey) keyInput.value = savedKey;
-
-  document.getElementById('key-toggle').onclick = () => {
-    const row = document.getElementById('key-row');
-    row.classList.toggle('visible');
-  };
-
-  document.getElementById('save-key-btn').onclick = () => {
-    localStorage.setItem('brain_api_key', keyInput.value.trim());
-    document.getElementById('key-row').classList.remove('visible');
-  };
-
-  document.getElementById('ask-submit').onclick = submitAsk;
-  document.getElementById('ask-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitAsk(); }
-  });
-}
-
-function getApiKey() {
-  return (document.getElementById('api-key-input').value.trim() ||
-          localStorage.getItem('brain_api_key') || '');
-}
-
-// Build a context string from top notes (used as system context)
-function buildContext(question) {
-  const q = question.toLowerCase();
-  const allNotes = Object.values(DATA.notes.categories || {}).flat();
-  // Simple keyword relevance
-  const scored = allNotes.map(n => {
-    const words = q.split(/\s+/).filter(w=>w.length>3);
-    const score = words.filter(w => (n.title+' '+n.content).toLowerCase().includes(w)).length;
-    return { score, note: n };
-  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,6);
-
-  if (!scored.length) return '';
-  return scored.map(x=>`[${x.note.title}]\n${x.note.content.slice(0,600)}`).join('\n\n---\n\n');
-}
-
-async function submitAsk() {
-  const input   = document.getElementById('ask-input');
-  const btn     = document.getElementById('ask-submit');
-  const question = input.value.trim();
-  if (!question) return;
-
-  const key = getApiKey();
-  if (!key) {
-    appendMsg('system', 'Please set your Anthropic API key (⚙ API key button above).');
-    return;
-  }
-
-  appendMsg('user', question);
-  input.value = '';
-  btn.disabled = true;
-  document.getElementById('thinking').classList.add('visible');
-  document.getElementById('chat-window').scrollTop = 99999;
-
-  const context = buildContext(question);
-  const sysPrompt = `You are answering questions about a personal knowledge corpus.
-${context ? `Here are the most relevant notes from the corpus:\n\n${context}\n\n` : ''}
-Answer the question based on these notes. Be specific. Cite note titles when relevant. 
-If the notes don't contain enough information, say so honestly.`;
-
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
-        system: sysPrompt,
-        messages: [{ role: 'user', content: question }],
-      })
-    });
-
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.error?.message || `HTTP ${resp.status}`);
-    }
-
-    const data = await resp.json();
-    const answer = data.content?.[0]?.text || '(no response)';
-
-    // Extract cited note titles to show as source chips
-    const allNotes = Object.values(DATA.notes.categories || {}).flat();
-    const cited = allNotes.filter(n => answer.toLowerCase().includes(n.title.toLowerCase().slice(0,20)));
-
-    document.getElementById('thinking').classList.remove('visible');
-    appendMsg('assistant', answer, cited.slice(0,5));
-
-  } catch(e) {
-    document.getElementById('thinking').classList.remove('visible');
-    appendMsg('system', `Error: ${e.message}`);
-  } finally {
-    btn.disabled = false;
-    document.getElementById('chat-window').scrollTop = 99999;
-  }
-}
-
-function appendMsg(role, text, sources) {
-  const row = document.createElement('div');
-  row.className = `msg-row ${role}`;
-
-  const label = { user:'you', assistant:'brain', system:'sys' }[role] || role;
-  let html = `<div class="msg-role">${label}</div><div class="msg-body">${esc(text)}`;
-
-  if (sources && sources.length) {
-    const chips = sources.map(n =>
-      `<span class="source-chip" onclick="switchPanel('notes');setTimeout(()=>openNoteById('${n.id}'),50)">${esc(n.title.slice(0,30))}</span>`
-    ).join('');
-    html += `<div class="sources-block"><div class="sources-label">Sources</div>${chips}</div>`;
-  }
-  html += '</div>';
-  row.innerHTML = html;
-  document.getElementById('chat-window').appendChild(row);
-}
-
-// ═══════════════════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════════════════
-function esc(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ═══════════════════════════════════════════════════════════
-// BOOT
-// ═══════════════════════════════════════════════════════════
-loadAll();
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
