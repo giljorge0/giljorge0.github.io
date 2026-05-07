@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-07T01:35:53.915925+00:00",
-  "version": 2,
+  "generated_at": "2026-05-07T14:15:08.896570+00:00",
+  "version": 4,
   "corpus_size": {
     "note_count": 2062,
     "total_words": 272735
@@ -18,12 +18,12 @@
       "Math": 25,
       "wiki_page": 10,
       "Literature": 4,
-      "o_m\u00e9todo": 2,
-      "alicerce_primordial": 2,
-      "coisa_de": 2,
       "uma_viagem": 2,
-      "Science": 2,
-      "Social": 2
+      "coisa_de": 2,
+      "alicerce_primordial": 2,
+      "o_m\u00e9todo": 2,
+      "Social": 2,
+      "Science": 2
     },
     "top_concepts": {
       "your": 1506,
@@ -82,33 +82,33 @@
   "stylistic_markers": {
     "avg_word_length": 4.27,
     "avg_sentence_length": 19.04,
-    "vocabulary_richness": 0.32,
+    "vocabulary_richness": 0.317,
     "punctuation_style": {
       "uses_semicolons": 363,
       "uses_parentheticals": 168,
       "uses_em_dash": 8
     },
     "sample_sentences": [
-      "purifying your information network, only being exposed to the highest quality info, makes scaling + density meaningful, solving our dillema.",
-      "the fake and dangerous metric of business, it can make you feel youve done a lot when in fact you did nothing.",
-      "It hides your inneficiencies, it allows in subtle distractions that actually don't take you where you want to go",
-      "massive correlation between state of mind and performance.",
-      "If something is eating your brain in your life, like the situation of managing emotional stuff we had, that made you slow on the track, and the power that comes when one has a clean consciousness, it allows you to place all focus on the present, unapologetically",
-      "in your search for knowledge and information for the lack of a better term (you are doing something unprecedented) knowing where to go fast and where to slow down in this space becomes crutial through the exploration/exploitation lens.",
-      "I sometimes cant even contain myself from what I am and what Im gonna do.",
-      "a great advantage in searching the space of information is timing and selective memory",
-      "I own my greatest and most ambitious project, I am my own startup, my marketing target, life itself",
-      "You are painting your life, you must choose where to leave your mark, painting where others havent.",
-      "Sometimes it's a rat race to see who gets a spot in a thin funnel.",
-      "play the game, but know when to rise above it",
-      "this project we are on, with the digital setup for example, is about scaling you, you at scale",
-      "this mechanism or tokenizing ideas and concepts is dominated by AI and in the age of the dead internet all kinds of concepts you like will be neatly expressed by AI.",
-      "To go beyond this tho you go to the source, you interact human to human precisely to get the nonsensical, the wrong, the gap, the absurd, the substrate and not its dillution, those slow parts in books you don't understand",
-      "offloading your brain, writing down the ideas as you are about to sleep.",
-      "It synergizes with that thing of planning the day of tommorow and now you are ready to sleep, you are ready to wake up to it\nearning sleep through the necessity of physical and mental adaptation, integration and overcoming\nalso most notes Ive taken as im about to sleep I dont understand what is written",
-      "and I wonder, how many out there are doing exactly this",
-      "you gotta face the possibility of wasted time and infinite loss, then by being afraid do you perceive its value\nthinking for example that there is no more time for you to read books.",
-      "The story is written."
+      "The artist which has a vision is cursed to see its projected form from the world of ideas as very much blend compared to his imagination.",
+      "He pays this price for the highness of the imagination from the real world and in direction to the world of ideas.",
+      "when people say you are promissing, believe it and promiss it, put that pressure onto you and go get it, be grateful thta someone saw something in you, never dissapoint them.",
+      "That virtue is in tbe middle is almost necessary, alone on the argument that nothing is infinite, on an infinite domain taking the limit to the boundary many times isnt the best option, and so somehwere in the middle is virtue but where in the middle is the real question",
+      "George hotz saying he holds no secrets, he can tell you what he is gonna do because he is so confident that you competing he wins.",
+      "This is a belief that prompts you to be a winner.",
+      "He is essentially saying he has the it factor.",
+      "In fact competing on equal grounds gives even more motivation, for now you know its for real and the chip inside you turns, you are ready to give everything to win.",
+      "This is a conseguence of freedom of information and freedom of action.",
+      "In deep learning I find this framework of encoder-decoder, teacher student, adversarial.",
+      "It seems self play can be unlocked through having these two faces and competing operations that improve each other.",
+      "Just like LLMS and google brought a fast end to discussions, as in those family table discussion that otherwise wohld be long and contentful, so will smarts contracts and negotations through AI agent's code formalize debates so that right away we can get to mathematical truth, without being vague and debating on the semantics front instead of the mathematical front which we sometimes have difficulty translating into words.",
+      "So an automated AI that translates arguments to code with bayesian probabilities...",
+      "Can cut debates short to disagree only on the priors of the participants, and making them relaize the difference in world models they have.",
+      "You can value your day much more than 24 hours.",
+      "Most people value it less, for they allow time to be wasted in commuting and what not.",
+      "What if you could make any time be valuable, but also making sleep time valuable through lucid dreaming of sorts, which Im not even close to being able to right now, watching videos faster than 1x speed.",
+      "Effectively doing shortcuts to may things, so you dont allow your time to be booked irrespective of merit.",
+      "A 2 hour class is 2 hours regardless of wether you get everything after the fiest slide or dont get anything, and again you can do multiple things at once there.",
+      "They say death is one great invention of evolution, may also be one of engineering evolution\n."
     ]
   },
   "intellectual_lineage": {
@@ -120,39 +120,39 @@
       "Fernando Pessoa": 8,
       "Alicerce Primordial": 8,
       "Santo Agostinho": 7,
-      "Usain Bolt": 6,
       "Albert Einstein": 6,
+      "Usain Bolt": 6,
       "Casa Verde": 5,
-      "Andrew Tate": 4,
-      "Benjamin Button": 4,
+      "Isaac Newton": 4,
       "Jordan Peterson": 4,
+      "Further Questions": 4,
       "Bertrand Russel": 4,
       "Judea Pearl": 4,
-      "Isaac Newton": 4,
-      "Further Questions": 4,
+      "Andrew Tate": 4,
+      "Benjamin Button": 4,
+      "Markus Gabriel": 3,
       "Mestre Ogway": 3,
       "Manuel Teixeira Gomes": 3,
-      "Markus Gabriel": 3,
       "Almada Negreiros": 3,
       "Oscar Wilde": 3,
-      "Sean Carroll": 3,
       "Bruce Lee": 3,
       "Bryan Johnson": 3,
-      "Nico Rosberg": 2,
-      "Physics Informing": 2,
-      "Richard Aragon": 2,
+      "Sean Carroll": 3,
+      "Frank Jackson": 2,
+      "David Lewis": 2,
       "On The": 2,
-      "This Nietzsche": 2,
-      "George Hotz": 2,
-      "That Zarathustra": 2,
-      "Ben Goertzel": 2,
-      "Jonathan Bi": 2,
-      "That Nietzsche": 2,
-      "Thus Zarathustra": 2,
-      "Los Alamos": 2,
-      "Shao Dre": 2,
-      "Gout Gout": 2,
-      "Michael Saunders": 2
+      "The Descriptive Question": 2,
+      "The Explanatory Question": 2,
+      "The Functional Question": 2,
+      "Gil Jorge Agrupamento De": 2,
+      "Relatividade Geral": 2,
+      "Richard Aragon": 2,
+      "Michael Saunders": 2,
+      "Michael Sandel": 2,
+      "Osama Bin Laden": 2,
+      "Al Qaeda": 2,
+      "Henry Ford": 2,
+      "Physics Informing": 2
     }
   },
   "argument_patterns": {
@@ -170,8 +170,60 @@
       "dominant_topic": "authored"
     }
   },
-  "llm_self_description": "Corpus of 2062 notes on: Philosophy, Life, Technology, AI, Physics",
-  "stance_map": {},
-  "previous_version_at": "2026-05-07T01:33:24.989242+00:00",
-  "drift": {}
+  "llm_self_description": " You are someone who seeks to understand the intricacies of the universe, both physically and philosophically, as evidenced by your frequent notes on topics like Physics, AI, Philosophy, and Math. Your intellectual curiosity extends beyond the scientific realm, with an interest in literature and business, as indicated by your tags related to Writing, Life, and Business.\n\nYour thought process appears analytical, often comparing and contrasting ideas, people, and concepts. You enjoy engaging with various perspectives, as suggested by figures like Stephen Hawking, Fernando Pessoa, Albert Einstein, and Jordan Peterson featured in your notes. The presence of figures like Uma Viagem and Alicerce Primordial suggests a personal philosophy that values introspection and self-discovery.\n\nYou are driven by questions that challenge the status quo and push the boundaries of knowledge, such as \"Is time passing or are you passing time?\" or \"Death as not really natural.\" Your notes on AI systems and the application of bets in these systems indicate a keen interest in technology and its potential impact on society.\n\nIn terms of intellectual traditions, your work shows engagement with both modern and classical thought. You draw from figures like Santo Agostinho and Bertrand Russel, suggesting an appreciation for historical philosophy, while also engaging with more contemporary thinkers like Judea Pearl.\n\nYour intellectual identity is defined by a deep-seated curiosity, a love for understanding the world around you, and a penchant for asking thought-provoking questions that drive your exploration of knowledge.",
+  "stance_map": {
+    "Philosophy": "The author appears to hold a philosophical perspective that emphasizes the creative tension between reality and imagination (the artist's curse), values moderation in virtuous actions (virtue is in the middle), sees potential in mutual competition and improvement through dual or adversarial systems (encoder-decoder, teacher student, self-play), explores the possibility of manipulating time for personal benefit (time as a construct to be optimized), and questions the naturalness of death as a concept, suggesting it could be an engineering achievement rather than a biological necessity.",
+    "Life": "The author's intellectual stance can be summarized as: Confident self-assuredness, believing in one's potential to win (as seen in the \"all cards on the table\" note), an emphasis on transparency and the use of technology for efficiency (as seen in the \"fast discussions and debates\" note), a drive towards knowledge acquisition through learning new languages (as seen in the \"learning new languages\" note), and a focus on understanding underlying structures to solve complex problems (as seen in the \"application of the bet in AI systems\" note).",
+    "Technology": "The author's intellectual stance emphasizes the potential for technological advancements to greatly enhance human productivity and understanding, particularly in areas like language processing and recommendation systems. However, they also acknowledge the current limitations of these technologies, such as their inability to replicate human-like critical thinking or optimize algorithms to avoid relying on randomness for solutions. The author advocates for leveraging technology while acknowledging its quirks and limitations, striving for a balance between maximizing its potential and understanding its current capabilities.",
+    "pdf": "The author's intellectual stance can be characterized as critical and analytical. They approach topics with scrutiny and depth, examining specific cases to delve into complex philosophical concepts, such as the completeness of the a priori reasoning method, the foundation of human understanding, and the origin of time. They also express a concern for societal issues, such as respecting human rights and critiquing historical positions of women.",
+    "AI": "The author has a primarily optimistic and integrative intellectual stance towards AI. They believe in the potential for artificial intelligence to surpass human intelligence in efficiency, and suggest merging AI with biological intelligence through BCIs. They also advocate for a neurosymbolic approach, combining symbolic knowledge with deep learning's implicit learning. The author also considers compositionality within language model reasoning, self-prompting, and higher signal-to-noise ratio in scaling laws as key aspects. Additionally, they draw parallels between human learning and AI learning, suggesting that the brain may operate similarly to neural networks, although acknowledging that our understanding of the brain's architecture and functioning is still limited.",
+    "Physics": "The author's intellectual stance appears to emphasize the interplay between potentiality and observable reality, suggesting a view of the universe as both a superposition of possibilities (until observed) and a series of subsequent entanglements. They also seem to value foresight and forward-thinking, acknowledging the challenges of being ahead of one's time but finding pleasure in the long-term effects of such actions. Lastly, they propose a concept that suggests manipulating speed could alter the perception of time, potentially slowing down entropy.",
+    "Writing": "The author's intellectual stance, as demonstrated by these notes, is critical and thought-provoking. They challenge societal norms and question the preference for entertainment over expertise, particularly in areas such as media and art, as seen in their analysis of Jose de Almada Negreiros' painting \"A engomadeira\" and the rise of comedians in podcasting.",
+    "Business": "The author advocates for diversification and continuous adaptation in business, encouraging individuals to combine skills from various branches to reach greatness. They also critique the complacency of those who rely on current trends, such as YouTube content creators, and suggest the creation of a platform focused solely on the exchange and evolution of ideas.",
+    "Math": "The author's intellectual stance appears to be rooted in understanding complex systems, particularly those involving computation, dimensions, and exponentials. They emphasize the interconnectedness and irreducibility of concepts, the importance of considering multiple paths and dimensions, and highlighting the potential for unforeseen growth and complexity in human-created structures.",
+    "wiki_page": "The author appears to be questioning the completeness of a priori reasoning, suggesting that it may not provide comprehensive knowledge about all possible subjects or concepts, but also appears interested in exploring its fundamental role in understanding and interpersonal relationships, as well as the primordial foundation of human rights."
+  },
+  "previous_version_at": "2026-05-07T12:40:15.926334+00:00",
+  "drift": {
+    "Business": {
+      "old": "1. The author generally embraces a realistic, analytical, and strategic approach to business, emphasizing clarity of process and understanding as keys to top performance.\n2. The author advocates for a blend of competition and cooperation, viewing monopolies as beneficial for long-term progress and resource management, while also acknowledging the dangers of indefinite optimism.\n3. The author highlights the importance of understanding value over price, emphasizing alignment for capitalizing on momentum and the strength of collective efforts.\n4. In war or negotiation, the author values peaceful outcomes, viewing winning as a mutual agreement where one party's loss is unrecognized by the other.",
+      "new": "The author advocates for diversification and continuous adaptation in business, encouraging individuals to combine skills from various branches to reach greatness. They also critique the complacency of those who rely on current trends, such as YouTube content creators, and suggest the creation of a platform focused solely on the exchange and evolution of ideas."
+    },
+    "Technology": {
+      "old": "The author appears to hold a critical view of technology, particularly automation and algorithms, as they may pose significant threats to individualism and liberalism by potentially understanding humans better than we understand ourselves, leading to decisions being made for us. They also express concern about behavior control and the loss of free will due to technological advancements.",
+      "new": "The author's intellectual stance emphasizes the potential for technological advancements to greatly enhance human productivity and understanding, particularly in areas like language processing and recommendation systems. However, they also acknowledge the current limitations of these technologies, such as their inability to replicate human-like critical thinking or optimize algorithms to avoid relying on randomness for solutions. The author advocates for leveraging technology while acknowledging its quirks and limitations, striving for a balance between maximizing its potential and understanding its current capabilities."
+    },
+    "Math": {
+      "old": "The authors generally advocate for a data-driven, empirical approach to understanding mathematical concepts and their applications. They emphasize the importance of causality in correlations, the inverse relationship between deduction and induction, the logarithmic perception of the world, and the exploration of alternative number systems and their implications. They also highlight the impact of language on mathematical development and the use of mathematics to uncover new insights, such as in art or origami.",
+      "new": "The author's intellectual stance appears to be rooted in understanding complex systems, particularly those involving computation, dimensions, and exponentials. They emphasize the interconnectedness and irreducibility of concepts, the importance of considering multiple paths and dimensions, and highlighting the potential for unforeseen growth and complexity in human-created structures."
+    },
+    "Physics": {
+      "old": "",
+      "new": "The author's intellectual stance appears to emphasize the interplay between potentiality and observable reality, suggesting a view of the universe as both a superposition of possibilities (until observed) and a series of subsequent entanglements. They also seem to value foresight and forward-thinking, acknowledging the challenges of being ahead of one's time but finding pleasure in the long-term effects of such actions. Lastly, they propose a concept that suggests manipulating speed could alter the perception of time, potentially slowing down entropy."
+    },
+    "wiki_page": {
+      "old": "",
+      "new": "The author appears to be questioning the completeness of a priori reasoning, suggesting that it may not provide comprehensive knowledge about all possible subjects or concepts, but also appears interested in exploring its fundamental role in understanding and interpersonal relationships, as well as the primordial foundation of human rights."
+    },
+    "AI": {
+      "old": "The authors generally maintain a nuanced view on AI, acknowledging its potential to revolutionize technology and surpass human capabilities in certain areas, such as pattern recognition and data processing. However, they also emphasize that current AI systems are not yet able to fully understand or explain their own decisions, and suggest that humans still have a deeper understanding of our thoughts and intuition compared to AI. They advocate for the development of AI systems that can mimic human brain function and centralized information processing, but stress that achieving this level of sophistication may take significant time and advancements.",
+      "new": "The author has a primarily optimistic and integrative intellectual stance towards AI. They believe in the potential for artificial intelligence to surpass human intelligence in efficiency, and suggest merging AI with biological intelligence through BCIs. They also advocate for a neurosymbolic approach, combining symbolic knowledge with deep learning's implicit learning. The author also considers compositionality within language model reasoning, self-prompting, and higher signal-to-noise ratio in scaling laws as key aspects. Additionally, they draw parallels between human learning and AI learning, suggesting that the brain may operate similarly to neural networks, although acknowledging that our understanding of the brain's architecture and functioning is still limited."
+    },
+    "Life": {
+      "old": "1. The author emphasizes the importance of cooperation, specialization, and adaptability in human progress (Sapiens), acknowledges the impact of collective beliefs and storytelling on reality (The Uninhabitable Earth), encourages seeking diverse perspectives and patience for groundbreaking ideas (The Origin of Species), and suggests that accepting problems is crucial for finding solutions (The Uninhabitable Earth).\n\n2. The author's intellectual stance can be described as one advocating for collaboration, open-mindedness, adaptability, and the recognition of underlying patterns in understanding reality, while also acknowledging the role of collective beliefs and storytelling in shaping our perception of the world.",
+      "new": "The author's intellectual stance can be summarized as: Confident self-assuredness, believing in one's potential to win (as seen in the \"all cards on the table\" note), an emphasis on transparency and the use of technology for efficiency (as seen in the \"fast discussions and debates\" note), a drive towards knowledge acquisition through learning new languages (as seen in the \"learning new languages\" note), and a focus on understanding underlying structures to solve complex problems (as seen in the \"application of the bet in AI systems\" note)."
+    },
+    "pdf": {
+      "old": "",
+      "new": "The author's intellectual stance can be characterized as critical and analytical. They approach topics with scrutiny and depth, examining specific cases to delve into complex philosophical concepts, such as the completeness of the a priori reasoning method, the foundation of human understanding, and the origin of time. They also express a concern for societal issues, such as respecting human rights and critiquing historical positions of women."
+    },
+    "Philosophy": {
+      "old": "",
+      "new": "The author appears to hold a philosophical perspective that emphasizes the creative tension between reality and imagination (the artist's curse), values moderation in virtuous actions (virtue is in the middle), sees potential in mutual competition and improvement through dual or adversarial systems (encoder-decoder, teacher student, self-play), explores the possibility of manipulating time for personal benefit (time as a construct to be optimized), and questions the naturalness of death as a concept, suggesting it could be an engineering achievement rather than a biological necessity."
+    },
+    "Writing": {
+      "old": "The author appears to hold a nonconformist intellectual stance, advocating for personal freedom and self-reliance in thought and creativity. They emphasize the importance of individualism and critical thinking, and express skepticism towards the limitations imposed by language and traditional knowledge sources like books.",
+      "new": "The author's intellectual stance, as demonstrated by these notes, is critical and thought-provoking. They challenge societal norms and question the preference for entertainment over expertise, particularly in areas such as media and art, as seen in their analysis of Jose de Almada Negreiros' painting \"A engomadeira\" and the rise of comedians in podcasting."
+    }
+  }
 }
