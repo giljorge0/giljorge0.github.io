@@ -613,48 +613,34 @@ function fitGraph(svg, g, zoom) {
 /* ── Profile View ──────────────────────────────────────────── */
 let profileInitialized = false;
 
+/* ── Profile View ──────────────────────────────────────────── */
+let profileInitialized = false;
+
 function initProfile() {
   if (profileInitialized || !State.persona) return;
   profileInitialized = true;
 
   const p = State.persona;
 
-  // Date
+  // Date & Description
   const dateEl = $('#profile-date');
   if (dateEl) dateEl.textContent = `Generated ${formatDate(new Date().toISOString())}`;
-
-  // Description
   const descEl = $('#profile-desc');
-  if (descEl && p.llm_self_description) {
-    descEl.textContent = p.llm_self_description;
-  }
+  if (descEl && p.llm_self_description) descEl.textContent = p.llm_self_description;
 
   // Topical fingerprint
   const topicsEl = $('#topics-chart');
   if (topicsEl && p.topical_fingerprint?.top_tags) {
     const tags = Object.entries(p.topical_fingerprint.top_tags)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 8);
+      .sort((a, b) => b[1] - a[1]).slice(0, 8);
     const max = tags[0]?.[1] || 1;
-
     topicsEl.innerHTML = tags.map(([tag, count]) => `
       <div class="topic-row">
-        <div class="topic-label-row">
-          <span class="topic-name">${escapeHtml(tag)}</span>
-          <span class="topic-count">${count}</span>
-        </div>
-        <div class="topic-bar-bg">
-          <div class="topic-bar-fill" data-pct="${(count / max * 100).toFixed(1)}"></div>
-        </div>
+        <div class="topic-label-row"><span class="topic-name">${escapeHtml(tag)}</span><span class="topic-count">${count}</span></div>
+        <div class="topic-bar-bg"><div class="topic-bar-fill" data-pct="${(count / max * 100).toFixed(1)}"></div></div>
       </div>
     `).join('');
-
-    // Animate bars after paint
-    requestAnimationFrame(() => {
-      $$('.topic-bar-fill').forEach(bar => {
-        bar.style.width = bar.dataset.pct + '%';
-      });
-    });
+    requestAnimationFrame(() => { $$('.topic-bar-fill').forEach(bar => { bar.style.width = bar.dataset.pct + '%'; }); });
   }
 
   // Stance map
@@ -667,18 +653,29 @@ function initProfile() {
       </div>
     `).join('');
 
-    // --- NEW: INJECT STYLISTIC DNA ---
+    // --- STYLISTIC DNA (WITH DEEP DIVE TOGGLE) ---
     if (p.stylistic_markers && p.argument_patterns) {
       const styleContainer = document.createElement('div');
       styleContainer.className = 'profile-section';
       styleContainer.style.marginTop = '40px';
       
-      const args = Object.entries(p.argument_patterns)
-        .sort((a, b) => b[1] - a[1]).slice(0, 3)
-        .map(a => a[0].replace(/_/g, ' '));
+      const args = Object.entries(p.argument_patterns).sort((a, b) => b[1] - a[1]);
+      const topArgs = args.slice(0, 3).map(a => a[0].replace(/_/g, ' '));
+      
+      // Format Intellectual Lineage
+      const lineage = p.intellectual_lineage?.cited_figures || {};
+      const topCited = Object.entries(lineage).slice(0, 6).map(x => x[0]).join('<span style="color:#6b7280;"> · </span>') || 'No citations detected';
+
+      // Format Punctuation
+      const punct = p.stylistic_markers.punctuation_style || {};
+      const punctList = Object.entries(punct).map(([k,v]) => `${k.replace('uses_', '').replace('_', ' ')}: <span style="color:#fff">${v}</span>`).join('<br>');
 
       styleContainer.innerHTML = `
-        <h3 style="color: #c8a86b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px;">Stylistic & Argument DNA</h3>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px;">
+          <h3 style="color: #c8a86b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Stylistic & Argument DNA</h3>
+          <button id="btn-deep-dna" style="background: none; border: 1px solid rgba(255,255,255,0.2); color: #a0aabf; font-size: 11px; padding: 4px 10px; border-radius: 4px; cursor: pointer; text-transform: uppercase;">Expand Deep Data ↴</button>
+        </div>
+        
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; color: #a0aabf; font-size: 14px;">
           <div>
             <strong>Rhythm & Vocabulary</strong><br>
@@ -688,13 +685,53 @@ function initProfile() {
           </div>
           <div>
             <strong>Dominant Logical Structures</strong><br>
-            <span style="color: #fff;">1.</span> ${args[0] || 'N/A'}<br>
-            <span style="color: #fff;">2.</span> ${args[1] || 'N/A'}<br>
-            <span style="color: #fff;">3.</span> ${args[2] || 'N/A'}
+            <span style="color: #fff;">1.</span> ${topArgs[0] || 'N/A'}<br>
+            <span style="color: #fff;">2.</span> ${topArgs[1] || 'N/A'}<br>
+            <span style="color: #fff;">3.</span> ${topArgs[2] || 'N/A'}
+          </div>
+        </div>
+
+        <div id="deep-dna-panel" style="display: none; margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(255,255,255,0.15); font-size: 13px; color: #a0aabf;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            
+            <div>
+              <strong style="color: #6577a8; display: block; margin-bottom: 6px;">Intellectual Lineage</strong>
+              <div style="margin-bottom: 15px; color: #e0e0e0;">${topCited}</div>
+              
+              <strong style="color: #6577a8; display: block; margin-bottom: 6px;">Punctuation Habits</strong>
+              <div style="color: #a0aabf;">${punctList || 'Not enough data'}</div>
+            </div>
+
+            <div>
+              <strong style="color: #6577a8; display: block; margin-bottom: 6px;">Complete Logical Topology</strong>
+              ${args.map(([name, val]) => `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span>${name.replace(/_/g, ' ')}</span>
+                  <span style="color: #fff;">${(val * 100).toFixed(1)}%</span>
+                </div>
+              `).join('')}
+            </div>
+
           </div>
         </div>
       `;
       stancesEl.parentNode.appendChild(styleContainer);
+
+      // Add toggle logic
+      document.getElementById('btn-deep-dna').addEventListener('click', function() {
+        const panel = document.getElementById('deep-dna-panel');
+        if (panel.style.display === 'none') {
+          panel.style.display = 'block';
+          this.innerHTML = 'Hide Deep Data ↰';
+          this.style.color = '#c8a86b';
+          this.style.borderColor = 'rgba(200,168,107,0.4)';
+        } else {
+          panel.style.display = 'none';
+          this.innerHTML = 'Expand Deep Data ↴';
+          this.style.color = '#a0aabf';
+          this.style.borderColor = 'rgba(255,255,255,0.2)';
+        }
+      });
     }
   }
 }
