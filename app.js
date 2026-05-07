@@ -610,6 +610,7 @@ function fitGraph(svg, g, zoom) {
 }
 
 /* ── Profile View ──────────────────────────────────────────── */
+/* ── Profile View ──────────────────────────────────────────── */
 let profileInitialized = false;
 
 function initProfile() {
@@ -665,9 +666,38 @@ function initProfile() {
         <div class="stance-text">${escapeHtml(stance)}</div>
       </div>
     `).join('');
+
+    // --- NEW: INJECT STYLISTIC DNA ---
+    if (p.stylistic_markers && p.argument_patterns) {
+      const styleContainer = document.createElement('div');
+      styleContainer.className = 'profile-section';
+      styleContainer.style.marginTop = '40px';
+      
+      const args = Object.entries(p.argument_patterns)
+        .sort((a, b) => b[1] - a[1]).slice(0, 3)
+        .map(a => a[0].replace(/_/g, ' '));
+
+      styleContainer.innerHTML = `
+        <h3 style="color: #c8a86b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px;">Stylistic & Argument DNA</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; color: #a0aabf; font-size: 14px;">
+          <div>
+            <strong>Rhythm & Vocabulary</strong><br>
+            <span style="color: #fff;">Sentence length:</span> ${p.stylistic_markers.avg_sentence_length || '?'} words avg<br>
+            <span style="color: #fff;">Word length:</span> ${p.stylistic_markers.avg_word_length || '?'} chars avg<br>
+            <span style="color: #fff;">Lexical richness:</span> ${((p.stylistic_markers.vocabulary_richness || 0) * 100).toFixed(1)}% unique
+          </div>
+          <div>
+            <strong>Dominant Logical Structures</strong><br>
+            <span style="color: #fff;">1.</span> ${args[0] || 'N/A'}<br>
+            <span style="color: #fff;">2.</span> ${args[1] || 'N/A'}<br>
+            <span style="color: #fff;">3.</span> ${args[2] || 'N/A'}
+          </div>
+        </div>
+      `;
+      stancesEl.parentNode.appendChild(styleContainer);
+    }
   }
 }
-
 /* ── Bootstrap ─────────────────────────────────────────────── */
 async function bootstrap() {
   // Fetch all data in parallel
