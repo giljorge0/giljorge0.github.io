@@ -525,13 +525,21 @@ function initBrain() {
     .on('mouseleave', () => { if (tooltip) tooltip.classList.remove('visible'); });
 
   // UI CONTROLS
+  // Meta count
+  const metaEl = $('#graph-meta');
+  if (metaEl) metaEl.textContent = `${nodes.length} nodes · ${links.length} edges`;
+
+  // Fit
   $('#btn-zoom-fit')?.addEventListener('click', () => fitGraph(svg, g, zoom));
-  
+
+  // Freeze / Play Physics
   const btnFreeze = $('#btn-freeze');
   if (btnFreeze) {
+    btnFreeze.classList.add('active');
     btnFreeze.innerHTML = '▶ Play Physics';
     btnFreeze.addEventListener('click', function() {
       State.graphFrozen = !State.graphFrozen;
+      this.classList.toggle('active', State.graphFrozen);
       if (State.graphFrozen) {
         this.innerHTML = '▶ Play Physics';
         sim.stop();
@@ -544,161 +552,17 @@ function initBrain() {
     });
   }
 
-  setTimeout(() => fitGraph(svg, g, zoom), 300);
-}
-  // Defs
-  const defs = svg.append('defs');
-  const glow = defs.append('filter').attr('id', 'glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
-  glow.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'blur');
-  const feMerge = glow.append('feMerge');
-  feMerge.append('feMergeNode').attr('in', 'blur');
-  feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
-
-  // Zoom
-  const zoom = d3.zoom()
-    .scaleExtent([0.1, 6])
-    .on('zoom', ({ transform }) => g.attr('transform', transform));
-  svg.call(zoom);
-  State.graphZoom = zoom;
-
-  const g = svg.append('g');
-
-  // 1. Arrange nodes in an instant "Cosmic Spiral" (Phyllotaxis)
-  const cx = width() / 2;
-  const cy = height() / 2;
-  nodes.forEach((n, i) => {
-    const radius = Math.sqrt(i) * 45; // Spread distance
-    const angle = i * Math.PI * 2.39996; // Golden ratio angle
-    n.x = cx + radius * Math.cos(angle);
-    n.y = cy + radius * Math.sin(angle);
-    n.fx = n.x; // Lock x position
-    n.fy = n.y; // Lock y position
-  });
-
-  // 2. Setup Simulation (Paused by default)
-  const sim = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d => d.id).distance(80).strength(0.5))
-    .force('charge', d3.forceManyBody().strength(-200))
-    .force('center', d3.forceCenter(cx, cy))
-    .force('collision', d3.forceCollide(22));
-
-  sim.stop(); // Stop physics engine immediately to save CPU
-  sim.tick(); // Force one frame to render the static spiral
-  State.graphSim = sim;
-
-  // Links
-  const linkSel = g.append('g').attr('class', 'links')
-    .selectAll('line')
-    .data(links)
-    .join('line')
-    .attr('class', 'link');
-
-  // Nodes
-  const nodeSel = g.append('g').attr('class', 'nodes')
-    .selectAll('g')
-    .data(nodes)
-    .join('g')
-    .attr('class', d => `node node--${d.type === 'mine' ? 'mine' : 'external'}`)
-    .call(d3.drag()
-      .on('start', (event, d) => { if (!event.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
-      .on('drag',  (event, d) => { d.fx = event.x; d.fy = event.y; })
-      .on('end',   (event, d) => { if (!event.active) sim.alphaTarget(0); if (!State.graphFrozen) { d.fx = null; d.fy = null; } })
-    );
-
-  // Node circles — radius based on link degree
-  const degreeMap = {};
-  links.forEach(l => {
-    const s = typeof l.source === 'object' ? l.source.id : l.source;
-    const t = typeof l.target === 'object' ? l.target.id : l.target;
-    degreeMap[s] = (degreeMap[s] || 0) + 1;
-    degreeMap[t] = (degreeMap[t] || 0) + 1;
-  });
-
-  nodeSel.append('circle')
-    .attr('r', d => 5 + Math.min((degreeMap[d.id] || 0) * 1.5, 12))
-    .attr('filter', 'url(#glow)');
-
-  nodeSel.append('text')
-    .attr('dy', d => -(6 + Math.min((degreeMap[d.id] || 0) * 1.5, 12)))
-    .text(d => d.label || d.id);
-
-  // Tick
-  sim.on('tick', () => {
-    linkSel
-      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
-    nodeSel.attr('transform', d => `translate(${d.x},${d.y})`);
-  });
-
-  // Tooltip on hover
-  const tooltip = $('#graph-tooltip');
-  nodeSel
-    .on('mouseenter', (event, d) => {
-      if (tooltip) {
-        tooltip.innerHTML = `
-          <div class="tooltip-label">${escapeHtml(d.label || d.id)}</div>
-          <div class="tooltip-type">${d.type === 'mine' ? '◉ Your note' : '○ External'} ${d.group ? `· ${d.group}` : ''}</div>
-          ${d.excerpt ? `<div class="tooltip-excerpt">${escapeHtml(d.excerpt)}</div>` : ''}
-        `;
-        tooltip.classList.add('visible');
-      }
-      // Dim unrelated nodes
-      nodeSel.classed('node--dimmed', n => {
-        if (n.id === d.id) return false;
-        const connected = links.some(l => {
-          const s = typeof l.source === 'object' ? l.source.id : l.source;
-          const t = typeof l.target === 'object' ? l.target.id : l.target;
-          return (s === d.id && t === n.id) || (t === d.id && s === n.id);
-        });
-        return !connected;
-      });
-    })
-    .on('mouseleave', () => {
-      if (tooltip) tooltip.classList.remove('visible');
-      nodeSel.classed('node--dimmed', false);
-    });
-
-  // Meta
-  const metaEl = $('#graph-meta');
-  if (metaEl) metaEl.textContent = `${nodes.length} nodes · ${links.length} edges`;
-
-  // ── Controls ──────────────────────────────────────────────
-
-  // Fit
-  $('#btn-zoom-fit')?.addEventListener('click', () => fitGraph(svg, g, zoom));
-
-  // Freeze / Play Physics Toggle
-  const btnFreeze = $('#btn-freeze');
-  if (btnFreeze) {
-    btnFreeze.classList.add('active');
-    btnFreeze.innerHTML = '▶ Play Physics';
-
-    btnFreeze.addEventListener('click', function() {
-      State.graphFrozen = !State.graphFrozen;
-      this.classList.toggle('active', State.graphFrozen);
-
-      if (State.graphFrozen) {
-        this.innerHTML = '▶ Play Physics';
-        sim.stop();
-        nodes.forEach(n => { n.fx = n.x; n.fy = n.y; }); // Freeze in current spot
-      } else {
-        this.innerHTML = '⏸ Freeze Graph';
-        nodes.forEach(n => { n.fx = null; n.fy = null; }); // Unlock nodes
-        sim.alpha(1).restart(); // Ignite the physics engine
-      }
-    });
-  }
-
-  // Mine only
+  // Mine only — handles both real data (role:'output') and demo data (type:'mine')
   $('#btn-mine')?.addEventListener('click', function() {
     State.graphMineOnly = !State.graphMineOnly;
     this.classList.toggle('active', State.graphMineOnly);
+    const isMine = d => d.role === 'output' || d.type === 'mine';
     if (State.graphMineOnly) {
-      nodeSel.classed('node--dimmed', d => d.type !== 'mine');
+      nodeSel.classed('node--dimmed', d => !isMine(d));
       linkSel.style('opacity', l => {
-        const s = typeof l.source === 'object' ? l.source.type : null;
-        const t = typeof l.target === 'object' ? l.target.type : null;
-        return s === 'mine' && t === 'mine' ? 1 : 0.05;
+        const s = typeof l.source === 'object' ? l.source : nodes.find(n => n.id === l.source);
+        const t = typeof l.target === 'object' ? l.target : nodes.find(n => n.id === l.target);
+        return isMine(s) && isMine(t) ? 1 : 0.04;
       });
     } else {
       nodeSel.classed('node--dimmed', false);
@@ -706,28 +570,23 @@ function initBrain() {
     }
   });
 
-  // Search
+  // Graph search — checks title (real data) and label (demo data)
   $('#graph-search')?.addEventListener('input', function() {
     const q = this.value.toLowerCase().trim();
-    if (!q) {
-      nodeSel.classed('node--dimmed', false);
-      return;
-    }
+    if (!q) { nodeSel.classed('node--dimmed', false); return; }
     nodeSel.classed('node--dimmed', d =>
-      !(d.label || d.id || '').toLowerCase().includes(q)
+      !(d.title || d.label || d.id || '').toLowerCase().includes(q)
     );
   });
 
-  // Resize
-  const resizeObs = new ResizeObserver(() => {
+  // Resize: re-centre force on viewport change
+  new ResizeObserver(() => {
     sim.force('center', d3.forceCenter(width() / 2, height() / 2));
-  });
-  resizeObs.observe(svg.node());
+  }).observe(svg.node());
 
-  // Initial fit after sim settles
-  sim.on('end', () => fitGraph(svg, g, zoom));
-  setTimeout(() => fitGraph(svg, g, zoom), 2000);
+  setTimeout(() => fitGraph(svg, g, zoom), 300);
 }
+
 
 function fitGraph(svg, g, zoom) {
   try {
