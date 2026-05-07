@@ -168,43 +168,33 @@ function makeDemoPersona() {
 /* ── Router ────────────────────────────────────────────────── */
 function navigate(view) {
   if (!view) return;
-  // hide all views
-  $$('.view').forEach(el => {
-    el.classList.remove('view--active');
-    el.style.display = '';
-  });
+  // 1. Reset all views and links
+  $$('.view').forEach(el => { el.classList.remove('view--active'); el.style.display = ''; });
   $$('.nav-link').forEach(el => el.classList.remove('active'));
 
-  // show target
   const viewEl = $(`#view-${view}`);
   if (!viewEl) return;
 
+  // 2. Set State and handle "Brain" special display
   State.activeView = view;
   viewEl.style.display = view === 'brain' ? 'block' : '';
+  
+  // 3. THE ULTIMATE SCROLL FIX: Immediate snap + 100ms safety net
+  window.scrollTo(0, 0); 
+  setTimeout(() => window.scrollTo(0, 0), 100);
+
+  // 4. Trigger CSS transition
   void viewEl.offsetWidth;
   viewEl.classList.add('view--active');
-
-  // WAIT 50ms for the DOM to paint, then force scroll to absolute top
-  setTimeout(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, 50);
-
-  State.activeView = view;
-  viewEl.style.display = view === 'brain' ? 'block' : '';
-  // trigger reflow before adding class for transition
-  void viewEl.offsetWidth;
-  viewEl.classList.add('view--active');
-
-  // mark nav
   $$(`[data-view="${view}"]`).forEach(el => el.classList.add('active'));
 
-  // lazy init each section
-  if (view === 'garden') initGarden();
-  if (view === 'brain')  initBrain();
+  // 5. Initialize each section
+  if (view === 'garden')  initGarden();
+  if (view === 'brain')   initBrain();
   if (view === 'profile') initProfile();
-  if (view === 'about')  initAbout();
+  if (view === 'about')   initAbout(); // <--- Keeps your homepage counters working!
 
-  // update URL hash without scroll
+  // 6. Update URL
   history.replaceState(null, '', `#${view}`);
 }
 
@@ -446,13 +436,11 @@ function initBrain() {
 
   const nodes = data.nodes.map(n => ({ ...n }));
   
-  // 1. Map the clusters for filtering
   const clusterMap = {};
   nodes.forEach(n => { clusterMap[n.id] = n.cluster; });
   
-  // 2. THE ULTIMATE BROWSER SAVER: 
-  // Filter out cross-cluster edges, THEN sort by weight, THEN cap at 2500.
-  // This prevents the "Black Hole" of overlapping lines and saves the CPU.
+  // ULTRA-LIGHT EDGES: Only top 800 connections. 
+  // This makes the clusters visible but keeps FPS very high.
   const links = data.links
     .map(l => ({ ...l }))
     .filter(l => {
@@ -461,155 +449,103 @@ function initBrain() {
       return clusterMap[s] !== undefined && clusterMap[s] === clusterMap[t];
     })
     .sort((a, b) => (b.weight || 0) - (a.weight || 0))
-    .slice(0, 2500);
+    .slice(0, 800);
 
-  const svg     = d3.select('#graph-svg');
-  const width   = () => svg.node().clientWidth;
-  const height  = () => svg.node().clientHeight;
+  const svg = d3.select('#graph-svg');
+  const width = () => svg.node().clientWidth;
+  const height = () => svg.node().clientHeight;
 
-  // Defs (Glow effect)
-  const defs = svg.append('defs');
-  const glow = defs.append('filter').attr('id', 'glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
-  glow.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'blur');
-  const feMerge = glow.append('feMerge');
-  feMerge.append('feMergeNode').attr('in', 'blur');
-  feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+  // REMOVED GLOW DEFS FOR PERFORMANCE
 
-  // Zoom
   const zoom = d3.zoom()
-    .scaleExtent([0.1, 6])
+    .scaleExtent([0.1, 10])
     .on('zoom', ({ transform }) => g.attr('transform', transform));
   svg.call(zoom);
   State.graphZoom = zoom;
 
   const g = svg.append('g');
 
-  // 3. Arrange nodes in an instant "Cosmic Spiral" (Phyllotaxis)
+  // THE "BALL" INITIAL SHAPE: Random scatter in a central disk
   const cx = width() / 2;
   const cy = height() / 2;
-  nodes.forEach((n, i) => {
-    const radius = Math.sqrt(i) * 45; 
-    const angle = i * Math.PI * 2.39996; 
-    n.x = cx + radius * Math.cos(angle);
-    n.y = cy + radius * Math.sin(angle);
+  nodes.forEach((n) => {
+    const r = Math.random() * 200;
+    const a = Math.random() * Math.PI * 2;
+    n.x = cx + r * Math.cos(a);
+    n.y = cy + r * Math.sin(a);
     n.fx = n.x; 
     n.fy = n.y; 
   });
 
-  // 4. Setup Simulation (Paused by default)
   const sim = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d => d.id).distance(80).strength(0.5))
-    .force('charge', d3.forceManyBody().strength(-200))
+    .force('link', d3.forceLink(links).id(d => d.id).distance(50).strength(0.8))
+    .force('charge', d3.forceManyBody().strength(-150))
     .force('center', d3.forceCenter(cx, cy))
-    .force('collision', d3.forceCollide(22));
+    .force('collision', d3.forceCollide(12))
+    .alphaDecay(0.05); // Makes it settle faster
 
   sim.stop(); 
-  sim.tick(); 
   State.graphSim = sim;
 
-  // Links
   const linkSel = g.append('g').attr('class', 'links')
-    .selectAll('line')
-    .data(links)
-    .join('line')
-    .attr('class', 'link');
+    .selectAll('line').data(links).join('line').attr('class', 'link');
 
-  // Nodes
   const nodeSel = g.append('g').attr('class', 'nodes')
-    .selectAll('g')
+    .selectAll('circle')
     .data(nodes)
-    .join('g')
-    .attr('class', d => `node node--${d.type === 'mine' ? 'mine' : 'external'}`)
+    .join('circle')
+    .attr('r', d => 3 + (d.centrality * 50)) // Sized by importance
+    .attr('class', d => `node-circle node--${d.role === 'output' ? 'mine' : 'external'}`)
     .call(d3.drag()
-      .on('start', (event, d) => { if (!event.active && !State.graphFrozen) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+      .on('start', (event, d) => { if (!event.active && !State.graphFrozen) sim.alphaTarget(0.2).restart(); d.fx = d.x; d.fy = d.y; })
       .on('drag',  (event, d) => { d.fx = event.x; d.fy = event.y; })
       .on('end',   (event, d) => { if (!event.active) sim.alphaTarget(0); if (!State.graphFrozen) { d.fx = null; d.fy = null; } })
     );
 
-  // Node circles
-  const degreeMap = {};
-  links.forEach(l => {
-    const s = typeof l.source === 'object' ? l.source.id : l.source;
-    const t = typeof l.target === 'object' ? l.target.id : l.target;
-    degreeMap[s] = (degreeMap[s] || 0) + 1;
-    degreeMap[t] = (degreeMap[t] || 0) + 1;
-  });
-
-  nodeSel.append('circle')
-    .attr('r', d => 5 + Math.min((degreeMap[d.id] || 0) * 1.5, 12))
-    .attr('filter', 'url(#glow)');
-
-  nodeSel.append('text')
-    .attr('dy', d => -(6 + Math.min((degreeMap[d.id] || 0) * 1.5, 12)))
-    .text(d => d.title || d.label || d.id);
+  // TEXT LABELS REMOVED FOR PERFORMANCE
 
   sim.on('tick', () => {
-    linkSel
-      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
-    nodeSel.attr('transform', d => `translate(${d.x},${d.y})`);
+    linkSel.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+           .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    nodeSel.attr('cx', d => d.x).attr('cy', d => d.y);
   });
 
-  // Tooltip
   const tooltip = $('#graph-tooltip');
   nodeSel
     .on('mouseenter', (event, d) => {
       if (tooltip) {
         tooltip.innerHTML = `
-          <div class="tooltip-label">${escapeHtml(d.title || d.label || d.id)}</div>
-          <div class="tooltip-type">${d.type === 'mine' ? '◉ Your note' : '○ External'} ${d.group ? `· ${d.group}` : ''}</div>
+          <div class="tooltip-label">${escapeHtml(d.title || "Untitled Note")}</div>
+          <div class="tooltip-type">${d.role === 'output' ? '◉ Your note' : '○ Reference'}</div>
           ${d.snippet ? `<div class="tooltip-excerpt">${escapeHtml(d.snippet)}</div>` : ''}
         `;
         tooltip.classList.add('visible');
       }
-      nodeSel.classed('node--dimmed', n => {
-        if (n.id === d.id) return false;
-        return !links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id));
-      });
     })
-    .on('mouseleave', () => {
-      if (tooltip) tooltip.classList.remove('visible');
-      nodeSel.classed('node--dimmed', false);
-    });
+    .on('mouseleave', () => { if (tooltip) tooltip.classList.remove('visible'); });
 
-  const metaEl = $('#graph-meta');
-  if (metaEl) metaEl.textContent = `${nodes.length} nodes · ${links.length} visual edges`;
-
-  // Controls
+  // UI CONTROLS
   $('#btn-zoom-fit')?.addEventListener('click', () => fitGraph(svg, g, zoom));
-
+  
   const btnFreeze = $('#btn-freeze');
   if (btnFreeze) {
-    btnFreeze.classList.add('active');
     btnFreeze.innerHTML = '▶ Play Physics';
     btnFreeze.addEventListener('click', function() {
       State.graphFrozen = !State.graphFrozen;
-      this.classList.toggle('active', State.graphFrozen);
       if (State.graphFrozen) {
         this.innerHTML = '▶ Play Physics';
         sim.stop();
         nodes.forEach(n => { n.fx = n.x; n.fy = n.y; });
       } else {
-        this.innerHTML = '⏸ Freeze Graph';
+        this.innerHTML = '⏸ Freeze';
         nodes.forEach(n => { n.fx = null; n.fy = null; });
         sim.alpha(1).restart();
       }
     });
   }
 
-  $('#btn-mine')?.addEventListener('click', function() {
-    State.graphMineOnly = !State.graphMineOnly;
-    this.classList.toggle('active', State.graphMineOnly);
-    nodeSel.classed('node--dimmed', d => State.graphMineOnly && d.role !== 'output');
-  });
-
-  const resizeObs = new ResizeObserver(() => {
-    sim.force('center', d3.forceCenter(width() / 2, height() / 2));
-  });
-  resizeObs.observe(svg.node());
-  setTimeout(() => fitGraph(svg, g, zoom), 500);
+  setTimeout(() => fitGraph(svg, g, zoom), 300);
 }
-
   // Defs
   const defs = svg.append('defs');
   const glow = defs.append('filter').attr('id', 'glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
