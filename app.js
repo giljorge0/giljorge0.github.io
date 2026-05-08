@@ -179,13 +179,9 @@ function navigate(view) {
   State.activeView = view;
   viewEl.style.display = view === 'brain' ? 'block' : '';
   
-  // 3. Instant snap to top (bypass smooth-scroll for navigation)
-  document.documentElement.classList.add('instant-scroll');
-  window.scrollTo(0, 0);
-  requestAnimationFrame(() => {
-    window.scrollTo(0, 0);
-    document.documentElement.classList.remove('instant-scroll');
-  });
+  // 3. THE ULTIMATE SCROLL FIX: Immediate snap + 100ms safety net
+  window.scrollTo(0, 0); 
+  setTimeout(() => window.scrollTo(0, 0), 100);
 
   // 4. Trigger CSS transition
   void viewEl.offsetWidth;
@@ -304,103 +300,6 @@ function setupGardenControls() {
     filtersEl.appendChild(allBtn);
     cats.forEach(cat => filtersEl.appendChild(makeFilterBtn(cat, false)));
   }
-
-  // Wiki button
-  const wikiBtn = document.createElement('button');
-  wikiBtn.className = 'cat-btn cat-btn--wiki';
-  wikiBtn.innerHTML = 'Wiki ✦';
-  wikiBtn.title = 'LLM-generated concept pages';
-  wikiBtn.addEventListener('click', () => toggleWikiPanel());
-  if (filtersEl) filtersEl.appendChild(wikiBtn);
-}
-
-/* ── Wiki Panel ─────────────────────────────────────────────── */
-let wikiPanelOpen = false;
-let wikiData = null;
-
-async function toggleWikiPanel() {
-  const garden = $('#garden-grid');
-  const existing = $('#wiki-panel');
-
-  if (wikiPanelOpen && existing) {
-    existing.remove();
-    wikiPanelOpen = false;
-    if (garden) garden.style.display = '';
-    $$('.cat-btn--wiki').forEach(b => b.classList.remove('active'));
-    return;
-  }
-
-  wikiPanelOpen = true;
-  $$('.cat-btn--wiki').forEach(b => b.classList.add('active'));
-  if (garden) garden.style.display = 'none';
-
-  const panel = document.createElement('div');
-  panel.id = 'wiki-panel';
-  panel.className = 'wiki-panel';
-  panel.innerHTML = '<div class="wiki-loading">Loading wiki pages…</div>';
-  garden.parentNode.insertBefore(panel, garden.nextSibling);
-
-  if (!wikiData) {
-    try {
-      const res = await fetch('wiki.json');
-      wikiData = res.ok ? await res.json() : null;
-    } catch (e) { wikiData = null; }
-  }
-
-  renderWikiPanel(panel, wikiData);
-}
-
-function renderWikiPanel(panel, data) {
-  const pages = data?.pages || [];
-  if (!pages.length) {
-    panel.innerHTML = '<div class="wiki-empty">No wiki pages yet. Run: <code>python main.py wiki update</code></div>';
-    return;
-  }
-
-  panel.innerHTML = `
-    <div class="wiki-layout">
-      <nav class="wiki-sidebar" id="wiki-sidebar">
-        ${pages.map((p, i) => `
-          <button class="wiki-nav-btn${i === 0 ? ' active' : ''}" data-idx="${i}">
-            ${escapeHtml(p.concept || p.title)}
-            <span class="wiki-version">v${p.version || 1}</span>
-          </button>
-        `).join('')}
-      </nav>
-      <article class="wiki-content" id="wiki-content">
-        ${renderWikiPage(pages[0])}
-      </article>
-    </div>
-  `;
-
-  panel.querySelectorAll('.wiki-nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      panel.querySelectorAll('.wiki-nav-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const idx = parseInt(btn.dataset.idx);
-      const content = panel.querySelector('#wiki-content');
-      if (content) content.innerHTML = renderWikiPage(pages[idx]);
-    });
-  });
-}
-
-function renderWikiPage(page) {
-  if (!page) return '';
-  const related = (page.related || []).map(r =>
-    `<span class="wiki-related-tag">${escapeHtml(r)}</span>`
-  ).join('');
-  return `
-    <div class="wiki-page-header">
-      <h2 class="wiki-page-title">${escapeHtml(page.concept || page.title)}</h2>
-      <div class="wiki-page-meta">
-        v${page.version || 1}
-        ${page.date ? ` · ${formatDate(page.date)}` : ''}
-        ${page.sources ? ` · ${page.sources} source notes` : ''}
-      </div>
-      ${related ? `<div class="wiki-related">${related}</div>` : ''}
-    </div>
-    <div class="wiki-page-body">${renderMarkdown(page.content || '')}</div>
-  `;
 }
 
 function makeFilterBtn(label, isActive) {
@@ -430,9 +329,6 @@ function renderGarden() {
   if (!grid) return;
 
   let filtered = notes;
-
-  // Always exclude wiki_page notes from main garden
-  filtered = filtered.filter(n => !n.tags?.includes('wiki_page'));
 
   // Category filter
   if (State.gardenCategory !== 'all') {
@@ -494,24 +390,6 @@ function openNote(note) {
   ].filter(Boolean).join(' · ');
 
   bodyEl.innerHTML = renderMarkdown(note.content || '');
-
-  // PDF original link — shown when note came from a PDF
-  const existingPdfBar = reader.querySelector('.reader-pdf-bar');
-  if (existingPdfBar) existingPdfBar.remove();
-  const hasPdf = note.tags?.includes('pdf') || note.tags?.includes('authored') ||
-                 note.source_file?.endsWith('.pdf') || note.source_pdf;
-  if (hasPdf) {
-    const pdfBar = document.createElement('div');
-    pdfBar.className = 'reader-pdf-bar';
-    if (note.source_pdf) {
-      pdfBar.innerHTML = `<span class="pdf-badge">PDF</span> This note was extracted from a PDF.
-        <a class="pdf-link" href="${escapeHtml(note.source_pdf)}" target="_blank" rel="noopener">Open original ↗</a>`;
-    } else {
-      pdfBar.innerHTML = `<span class="pdf-badge">PDF</span> This note was extracted from an authored PDF document.`;
-    }
-    const readerContent = reader.querySelector('.reader-content');
-    if (readerContent) readerContent.insertBefore(pdfBar, readerContent.firstChild);
-  }
 
   reader.hidden = false;
   document.body.style.overflow = 'hidden';
@@ -733,11 +611,9 @@ function fitGraph(svg, g, zoom) {
 
 /* ── Profile View ──────────────────────────────────────────── */
 /* ── Profile View ──────────────────────────────────────────── */
-let profileInitialized = false;
-
 /* ── Profile View ──────────────────────────────────────────── */
-let profileInitialized = false;
 
+let profileInitialized = false;
 function initProfile() {
   if (profileInitialized || !State.persona) return;
   profileInitialized = true;
@@ -746,24 +622,9 @@ function initProfile() {
 
   // Date & Description
   const dateEl = $('#profile-date');
-  if (dateEl) {
-    const genAt = p.generated_at ? formatDate(p.generated_at) : formatDate(new Date().toISOString());
-    const noteCount = p.corpus_size?.note_count ?? 0;
-    const wordCount = p.corpus_size?.total_words ?? 0;
-    dateEl.textContent = `v${p.version ?? 1} · Generated ${genAt} · ${noteCount.toLocaleString()} notes · ${(wordCount/1000).toFixed(0)}k words`;
-  }
+  if (dateEl) dateEl.textContent = `Generated ${formatDate(new Date().toISOString())}`;
   const descEl = $('#profile-desc');
-  if (descEl) {
-    // Use llm_self_description if present, else build from corpus stats
-    if (p.llm_self_description) {
-      descEl.textContent = p.llm_self_description;
-    } else {
-      const topTags = Object.keys(p.topical_fingerprint?.top_tags || {}).slice(0, 5).join(', ');
-      const noteCount = p.corpus_size?.note_count ?? 0;
-      const wordCount = p.corpus_size?.total_words ?? 0;
-      descEl.textContent = `A corpus of ${noteCount.toLocaleString()} notes spanning ${(wordCount/1000).toFixed(0)}k words. Primary domains: ${topTags}. Run persona build with an API key to generate a full self-description.`;
-    }
-  }
+  if (descEl && p.llm_self_description) descEl.textContent = p.llm_self_description;
 
   // Topical fingerprint
   const topicsEl = $('#topics-chart');
@@ -791,12 +652,12 @@ function initProfile() {
     `).join('');
 
     // --- STYLISTIC DNA (WITH DEEP DIVE TOGGLE) ---
-    if (p.stylistic_markers) {
+    if (p.stylistic_markers && p.argument_patterns) {
       const styleContainer = document.createElement('div');
       styleContainer.className = 'profile-section';
       styleContainer.style.marginTop = '40px';
       
-      const args = Object.entries(p.argument_patterns || {}).sort((a, b) => b[1] - a[1]);
+      const args = Object.entries(p.argument_patterns).sort((a, b) => b[1] - a[1]);
       const topArgs = args.slice(0, 3).map(a => a[0].replace(/_/g, ' '));
       
       // Format Intellectual Lineage
@@ -872,65 +733,6 @@ function initProfile() {
     }
   }
 }
-
-    // --- DRIFT: How thinking has changed over time ---
-    if (p.drift && Object.keys(p.drift).length > 0) {
-      const driftContainer = document.createElement('div');
-      driftContainer.className = 'profile-section profile-section--drift';
-      
-      const driftEntries = Object.entries(p.drift)
-        .filter(([, d]) => d.old && d.new && d.old !== d.new)
-        .slice(0, 6);
-
-      if (driftEntries.length > 0) {
-        driftContainer.innerHTML = `
-          <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:8px;margin-bottom:20px;margin-top:40px;">
-            <h3 style="color:#c8a86b;font-size:14px;text-transform:uppercase;letter-spacing:1px;margin:0;">How Your Thinking Has Shifted</h3>
-            <span style="font-size:11px;color:#6b7280;font-family:var(--font-mono)">old → new per topic</span>
-          </div>
-          <div class="drift-list">
-            ${driftEntries.map(([topic, d]) => `
-              <div class="drift-item">
-                <div class="drift-topic">${escapeHtml(topic)}</div>
-                <div class="drift-columns">
-                  <div class="drift-col drift-col--old">
-                    <span class="drift-label">Before</span>
-                    <p>${escapeHtml((d.old || '').slice(0, 300))}${(d.old || '').length > 300 ? '…' : ''}</p>
-                  </div>
-                  <div class="drift-arrow">→</div>
-                  <div class="drift-col drift-col--new">
-                    <span class="drift-label">Now</span>
-                    <p>${escapeHtml((d.new || '').slice(0, 300))}${(d.new || '').length > 300 ? '…' : ''}</p>
-                  </div>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-        const profileInner = $('#profile-inner');
-        if (profileInner) profileInner.appendChild(driftContainer);
-      }
-    }
-
-    // --- SAMPLE SENTENCES ---
-    const samples = p.stylistic_markers?.sample_sentences;
-    if (samples && samples.length > 0) {
-      const samplesContainer = document.createElement('div');
-      samplesContainer.className = 'profile-section';
-      samplesContainer.innerHTML = `
-        <div style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:8px;margin-bottom:20px;margin-top:40px;">
-          <h3 style="color:#c8a86b;font-size:14px;text-transform:uppercase;letter-spacing:1px;margin:0;">Sample Sentences from Your Corpus</h3>
-        </div>
-        <div class="sample-sentences">
-          ${samples.slice(0, 5).map(sent => `
-            <blockquote class="sample-sentence">"${escapeHtml(sent.trim())}"</blockquote>
-          `).join('')}
-        </div>
-      `;
-      const profileInner = $('#profile-inner');
-      if (profileInner) profileInner.appendChild(samplesContainer);
-    }
-
 /* ── Bootstrap ─────────────────────────────────────────────── */
 async function bootstrap() {
   // Fetch all data in parallel
@@ -956,9 +758,7 @@ async function bootstrap() {
 /* ── Init ──────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   initNavScroll();
-  initRouter: {
-    initRouting();
-  }
+  initRouting();
   initReader();
   bootstrap();
 });
