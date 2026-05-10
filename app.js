@@ -179,9 +179,9 @@ function navigate(view) {
   State.activeView = view;
   viewEl.style.display = view === 'brain' ? 'block' : '';
   
-  // 3. Instant scroll — bypass smooth-scroll CSS on programmatic nav
-  window.scrollTo({ top: 0, behavior: 'instant' });
-  setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 50);
+  // 3. THE ULTIMATE SCROLL FIX: Immediate snap + 100ms safety net
+  window.scrollTo(0, 0); 
+  setTimeout(() => window.scrollTo(0, 0), 100);
 
   // 4. Trigger CSS transition
   void viewEl.offsetWidth;
@@ -435,285 +435,177 @@ function initBrain() {
   State.graphData = { ...data };
 
   const nodes = data.nodes.map(n => ({ ...n }));
-
-  // Build a cluster→size map for foci and colouring
-  const clusterSizes = {};
-  const clusterMap   = {};
-  nodes.forEach(n => {
-    clusterMap[n.id] = n.cluster;
-    clusterSizes[n.cluster] = (clusterSizes[n.cluster] || 0) + 1;
-  });
-
-  // Two link sets: intra-cluster (galaxy mode) and all (cluster mode)
-  const sortedLinks = data.links
+  
+  const clusterMap = {};
+  nodes.forEach(n => { clusterMap[n.id] = n.cluster; });
+  
+  // ULTRA-LIGHT EDGES: Only top 800 connections. 
+  // This makes the clusters visible but keeps FPS very high.
+  const links = data.links
     .map(l => ({ ...l }))
-    .sort((a, b) => (b.weight || 0) - (a.weight || 0));
-
-  const intraLinks = sortedLinks
     .filter(l => {
       const s = typeof l.source === 'object' ? l.source.id : l.source;
       const t = typeof l.target === 'object' ? l.target.id : l.target;
       return clusterMap[s] !== undefined && clusterMap[s] === clusterMap[t];
     })
+    .sort((a, b) => (b.weight || 0) - (a.weight || 0))
     .slice(0, 800);
 
-  const allLinks = sortedLinks.slice(0, 3000);
+  const svg = d3.select('#graph-svg');
+  const width = () => svg.node().clientWidth;
+  const height = () => svg.node().clientHeight;
 
-  // Start with intra links
-  let links = intraLinks.map(l => ({ ...l }));
-
-  const svg  = d3.select('#graph-svg');
-  const W    = () => svg.node().clientWidth  || 900;
-  const H    = () => svg.node().clientHeight || 600;
+  // Lightweight glow filter — single-pass feGaussianBlur, safe at 2000 nodes
+  const defs = svg.append('defs');
+  const glowFilter = defs.append('filter')
+    .attr('id', 'node-glow')
+    .attr('x', '-60%').attr('y', '-60%')
+    .attr('width', '220%').attr('height', '220%');
+  glowFilter.append('feGaussianBlur')
+    .attr('in', 'SourceGraphic').attr('stdDeviation', '2.5').attr('result', 'blur');
+  const feMerge = glowFilter.append('feMerge');
+  feMerge.append('feMergeNode').attr('in', 'blur');
+  feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
   const zoom = d3.zoom()
-    .scaleExtent([0.05, 12])
+    .scaleExtent([0.1, 10])
     .on('zoom', ({ transform }) => g.attr('transform', transform));
   svg.call(zoom);
   State.graphZoom = zoom;
 
   const g = svg.append('g');
 
-  // ── Cluster colour palette (Cosmic Academic) ───────────────
-  const PALETTE = [
-    '#c8a86b','#6577a8','#8a6b9c','#6b9c8a','#9c7a6b',
-    '#6b8a9c','#a89c6b','#7a6b9c','#c06b6b','#6b9cc0',
-    '#a88b6b','#6ba88b','#9c6b8a','#8b9c6b','#6b8b9c',
-  ];
-  const clusterColor = d => PALETTE[(d.cluster || 0) % PALETTE.length];
-
-  // ── Top 18 clusters for foci ───────────────────────────────
-  const topClusters = Object.keys(clusterSizes)
-    .sort((a, b) => clusterSizes[b] - clusterSizes[a])
-    .slice(0, 18);
-
-  function computeFoci() {
-    const cx = W() / 2, cy = H() / 2;
-    const R  = Math.min(W(), H()) * 1.4;
-    const foci = {};
-    topClusters.forEach((c, i) => {
-      const angle = (i / topClusters.length) * Math.PI * 2 - Math.PI / 2;
-      foci[c] = { x: cx + R * Math.cos(angle), y: cy + R * Math.sin(angle) };
-    });
-    return { foci, cx, cy };
-  }
-
-  // ── Initial scatter in centre disk ─────────────────────────
-  const initCx = W() / 2, initCy = H() / 2;
-  nodes.forEach(n => {
-    const r = Math.random() * 220, a = Math.random() * Math.PI * 2;
-    n.x  = initCx + r * Math.cos(a);
-    n.y  = initCy + r * Math.sin(a);
-    n.fx = n.x; n.fy = n.y;
+  // THE "BALL" INITIAL SHAPE: Random scatter in a central disk
+  const cx = width() / 2;
+  const cy = height() / 2;
+  nodes.forEach((n) => {
+    const r = Math.random() * 200;
+    const a = Math.random() * Math.PI * 2;
+    n.x = cx + r * Math.cos(a);
+    n.y = cy + r * Math.sin(a);
+    n.fx = n.x; 
+    n.fy = n.y; 
   });
 
-  // ── Simulation ─────────────────────────────────────────────
   const sim = d3.forceSimulation(nodes)
-    .force('link',      d3.forceLink(links).id(d => d.id).distance(45).strength(0.6))
-    .force('charge',    d3.forceManyBody().strength(-130))
-    .force('center',    d3.forceCenter(initCx, initCy))
-    .force('collision', d3.forceCollide(10))
-    .alphaDecay(0.04)
-    .stop();
+    .force('link', d3.forceLink(links).id(d => d.id).distance(50).strength(0.8))
+    .force('charge', d3.forceManyBody().strength(-150))
+    .force('center', d3.forceCenter(cx, cy))
+    .force('collision', d3.forceCollide(12))
+    .alphaDecay(0.05); // Makes it settle faster
 
+  sim.stop(); 
   State.graphSim = sim;
 
-  // ── Render links ───────────────────────────────────────────
-  const linkGroup = g.append('g').attr('class', 'links');
-  let linkSel = linkGroup.selectAll('line')
-    .data(links).join('line').attr('class', 'link');
+  const linkSel = g.append('g').attr('class', 'links')
+    .selectAll('line').data(links).join('line').attr('class', 'link');
 
-  // ── Render nodes ───────────────────────────────────────────
+  // Normalize centrality so radius is always visible regardless of PageRank scale.
+  // PageRank on 2000 nodes gives values ~0.0002–0.005 — multiply by raw r would give <3px.
+  const maxCentrality = Math.max(...nodes.map(n => n.centrality || 0), 0.0001);
+
   const nodeSel = g.append('g').attr('class', 'nodes')
     .selectAll('circle')
-    .data(nodes).join('circle')
-    .attr('r',      d => Math.max(3, 3 + (d.centrality || 0) * 55))
-    .attr('fill',   d => d.role === 'output' ? '#c8a86b' : '#6577a8')
-    .attr('stroke', d => d.role === 'output' ? 'rgba(200,168,107,0.5)' : 'rgba(101,119,168,0.3)')
-    .attr('stroke-width', 1)
-    .style('cursor', 'pointer')
+    .data(nodes)
+    .join('circle')
+    // sqrt of normalised centrality → compresses the range, small nodes stay visible
+    .attr('r', d => 5 + Math.sqrt((d.centrality || 0) / maxCentrality) * 13)
+    .attr('class', d => `node-circle node--${d.role === 'output' ? 'mine' : 'external'}`)
+    // Inline fill & stroke — bypasses the CSS selector mismatch
+    // (CSS was targeting `.node--mine circle` but the circle IS the element)
+    .attr('fill',         d => d.role === 'output' ? '#e8b84b' : '#7b9fd4')
+    .attr('stroke',       d => d.role === 'output' ? 'rgba(240,185,70,0.45)' : 'rgba(110,155,220,0.35)')
+    .attr('stroke-width', 1.5)
+    .attr('filter', 'url(#node-glow)')
     .call(d3.drag()
-      .on('start', (e, d) => {
-        if (!e.active && !State.graphFrozen) sim.alphaTarget(0.2).restart();
-        d.fx = d.x; d.fy = d.y;
-      })
-      .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
-      .on('end',   (e, d) => {
-        if (!e.active) sim.alphaTarget(0);
-        if (!State.graphFrozen) { d.fx = null; d.fy = null; }
-      })
+      .on('start', (event, d) => { if (!event.active && !State.graphFrozen) sim.alphaTarget(0.2).restart(); d.fx = d.x; d.fy = d.y; })
+      .on('drag',  (event, d) => { d.fx = event.x; d.fy = event.y; })
+      .on('end',   (event, d) => { if (!event.active) sim.alphaTarget(0); if (!State.graphFrozen) { d.fx = null; d.fy = null; } })
     );
 
-  // ── Tick ───────────────────────────────────────────────────
+  // TEXT LABELS REMOVED FOR PERFORMANCE
+
   sim.on('tick', () => {
-    linkSel
-      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    linkSel.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+           .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
     nodeSel.attr('cx', d => d.x).attr('cy', d => d.y);
   });
 
-  // ── Tooltip ────────────────────────────────────────────────
   const tooltip = $('#graph-tooltip');
   nodeSel
     .on('mouseenter', (event, d) => {
-      if (!tooltip) return;
-      tooltip.innerHTML = `
-        <div class="tooltip-label">${escapeHtml(d.title || 'Untitled')}</div>
-        <div class="tooltip-type">${d.role === 'output' ? '◉ Your note' : '○ Reference'} · cluster ${d.cluster ?? '—'}</div>
-        ${d.snippet ? `<div class="tooltip-excerpt">${escapeHtml(d.snippet)}</div>` : ''}
-      `;
-      tooltip.classList.add('visible');
+      if (tooltip) {
+        tooltip.innerHTML = `
+          <div class="tooltip-label">${escapeHtml(d.title || "Untitled Note")}</div>
+          <div class="tooltip-type">${d.role === 'output' ? '◉ Your note' : '○ Reference'}</div>
+          ${d.snippet ? `<div class="tooltip-excerpt">${escapeHtml(d.snippet)}</div>` : ''}
+        `;
+        tooltip.classList.add('visible');
+      }
     })
-    .on('mouseleave', () => tooltip?.classList.remove('visible'))
-    .on('click', (event, d) => {
-      // Navigate to the note in Garden view
-      navigate('garden');
-      setTimeout(() => {
-        State.gardenQuery = d.title || '';
-        const searchEl = $('#garden-search');
-        if (searchEl) { searchEl.value = d.title || ''; }
-        renderGarden();
-      }, 80);
-    });
+    .on('mouseleave', () => { if (tooltip) tooltip.classList.remove('visible'); });
 
-  // ── Meta ───────────────────────────────────────────────────
+  // UI CONTROLS
+  // Meta count
   const metaEl = $('#graph-meta');
   if (metaEl) metaEl.textContent = `${nodes.length} nodes · ${links.length} edges`;
 
-  // ── Fit ────────────────────────────────────────────────────
+  // Fit
   $('#btn-zoom-fit')?.addEventListener('click', () => fitGraph(svg, g, zoom));
-  setTimeout(() => fitGraph(svg, g, zoom), 300);
 
-  // ── Freeze / Play ──────────────────────────────────────────
+  // Freeze / Play Physics
   const btnFreeze = $('#btn-freeze');
   if (btnFreeze) {
+    btnFreeze.classList.add('active');
     btnFreeze.innerHTML = '▶ Play Physics';
-    btnFreeze.addEventListener('click', function () {
+    btnFreeze.addEventListener('click', function() {
       State.graphFrozen = !State.graphFrozen;
+      this.classList.toggle('active', State.graphFrozen);
       if (State.graphFrozen) {
         this.innerHTML = '▶ Play Physics';
-        this.classList.add('active');
         sim.stop();
         nodes.forEach(n => { n.fx = n.x; n.fy = n.y; });
       } else {
         this.innerHTML = '⏸ Freeze';
-        this.classList.remove('active');
         nodes.forEach(n => { n.fx = null; n.fy = null; });
         sim.alpha(1).restart();
       }
     });
   }
 
-  // ── Mine only ──────────────────────────────────────────────
-  $('#btn-mine')?.addEventListener('click', function () {
+  // Mine only — handles both real data (role:'output') and demo data (type:'mine')
+  $('#btn-mine')?.addEventListener('click', function() {
     State.graphMineOnly = !State.graphMineOnly;
     this.classList.toggle('active', State.graphMineOnly);
     const isMine = d => d.role === 'output' || d.type === 'mine';
-    nodeSel.style('opacity', d => State.graphMineOnly && !isMine(d) ? 0.06 : 1);
-    linkSel.style('opacity', l => {
-      if (!State.graphMineOnly) return null;
-      const s = typeof l.source === 'object' ? l.source : nodes.find(n => n.id === l.source);
-      const t = typeof l.target === 'object' ? l.target : nodes.find(n => n.id === l.target);
-      return isMine(s) && isMine(t) ? 0.7 : 0.02;
-    });
+    if (State.graphMineOnly) {
+      nodeSel.classed('node--dimmed', d => !isMine(d));
+      linkSel.style('opacity', l => {
+        const s = typeof l.source === 'object' ? l.source : nodes.find(n => n.id === l.source);
+        const t = typeof l.target === 'object' ? l.target : nodes.find(n => n.id === l.target);
+        return isMine(s) && isMine(t) ? 1 : 0.04;
+      });
+    } else {
+      nodeSel.classed('node--dimmed', false);
+      linkSel.style('opacity', null);
+    }
   });
 
-  // ── Graph search ───────────────────────────────────────────
-  $('#graph-search')?.addEventListener('input', function () {
+  // Graph search — checks title (real data) and label (demo data)
+  $('#graph-search')?.addEventListener('input', function() {
     const q = this.value.toLowerCase().trim();
-    if (!q) { nodeSel.style('opacity', null); return; }
-    nodeSel.style('opacity', d =>
-      (d.title || d.label || d.id || '').toLowerCase().includes(q) ? 1 : 0.05
+    if (!q) { nodeSel.classed('node--dimmed', false); return; }
+    nodeSel.classed('node--dimmed', d =>
+      !(d.title || d.label || d.id || '').toLowerCase().includes(q)
     );
   });
 
-  // ── Resize recentre ────────────────────────────────────────
+  // Resize: re-centre force on viewport change
   new ResizeObserver(() => {
-    if (!clusterModeActive) {
-      sim.force('center', d3.forceCenter(W() / 2, H() / 2));
-    }
+    sim.force('center', d3.forceCenter(width() / 2, height() / 2));
   }).observe(svg.node());
 
-  // ── CLUSTER MAP MODE ───────────────────────────────────────
-  let clusterModeActive = false;
-
-  const btnCluster = document.createElement('button');
-  btnCluster.id        = 'btn-cluster-mode';
-  btnCluster.className = 'graph-btn';
-  btnCluster.innerHTML = '⚄ Cluster Map';
-  document.getElementById('graph-controls').appendChild(btnCluster);
-
-  btnCluster.addEventListener('click', function () {
-    clusterModeActive = !clusterModeActive;
-    this.classList.toggle('active', clusterModeActive);
-
-    if (clusterModeActive) {
-      // ── Enter cluster mode ──────────────────────────────────
-      this.innerHTML = '🌌 Galaxy';
-
-      // Rebuild with all links
-      const newLinks = allLinks.map(l => ({ ...l }));
-      sim.force('link').links(newLinks);
-      links = newLinks;
-
-      // Rerender link DOM elements
-      linkSel = linkGroup.selectAll('line')
-        .data(newLinks, d => `${typeof d.source === 'object' ? d.source.id : d.source}-${typeof d.target === 'object' ? d.target.id : d.target}`)
-        .join(
-          enter => enter.append('line').attr('class', 'link').style('stroke-opacity', 0),
-          update => update,
-          exit   => exit.remove()
-        )
-        .transition().duration(600).style('stroke-opacity', 0.08);
-
-      // Assign cluster foci — pull islands apart
-      const { foci, cx, cy } = computeFoci();
-      sim.force('center', null);
-      sim.force('clusterX', d3.forceX(d => (foci[d.cluster] || { x: cx }).x).strength(0.14));
-      sim.force('clusterY', d3.forceY(d => (foci[d.cluster] || { y: cy }).y).strength(0.14));
-
-      // Recolour nodes by cluster
-      nodeSel.transition().duration(900)
-        .attr('fill',   d => clusterColor(d))
-        .attr('stroke', d => clusterColor(d));
-
-      // Update meta
-      if (metaEl) metaEl.textContent = `${nodes.length} nodes · ${newLinks.length} edges · cluster view`;
-
-    } else {
-      // ── Back to galaxy mode ─────────────────────────────────
-      this.innerHTML = '⚄ Cluster Map';
-
-      // Restore intra-cluster links
-      const newLinks = intraLinks.map(l => ({ ...l }));
-      sim.force('link').links(newLinks);
-      links = newLinks;
-
-      linkSel = linkGroup.selectAll('line')
-        .data(newLinks)
-        .join(
-          enter => enter.append('line').attr('class', 'link'),
-          update => update,
-          exit   => exit.remove()
-        );
-
-      // Restore central gravity
-      sim.force('clusterX', null);
-      sim.force('clusterY', null);
-      sim.force('center', d3.forceCenter(W() / 2, H() / 2));
-
-      // Restore role-based colours
-      nodeSel.transition().duration(700)
-        .attr('fill',   d => d.role === 'output' ? '#c8a86b' : '#6577a8')
-        .attr('stroke', d => d.role === 'output' ? 'rgba(200,168,107,0.5)' : 'rgba(101,119,168,0.3)');
-
-      if (metaEl) metaEl.textContent = `${nodes.length} nodes · ${newLinks.length} edges`;
-    }
-
-    // Auto-play so nodes travel to their new positions
-    if (State.graphFrozen && btnFreeze) btnFreeze.click();
-    else sim.alpha(1).restart();
-  });
+  setTimeout(() => fitGraph(svg, g, zoom), 300);
 }
 
 
@@ -739,50 +631,35 @@ function fitGraph(svg, g, zoom) {
 }
 
 /* ── Profile View ──────────────────────────────────────────── */
-let profileInitialized = false;
+/* ── Profile View ──────────────────────────────────────────── */
+/* ── Profile View ──────────────────────────────────────────── */
 
+let profileInitialized = false;
 function initProfile() {
   if (profileInitialized || !State.persona) return;
   profileInitialized = true;
 
   const p = State.persona;
 
-  // Date
+  // Date & Description
   const dateEl = $('#profile-date');
   if (dateEl) dateEl.textContent = `Generated ${formatDate(new Date().toISOString())}`;
-
-  // Description
   const descEl = $('#profile-desc');
-  if (descEl && p.llm_self_description) {
-    descEl.textContent = p.llm_self_description;
-  }
+  if (descEl && p.llm_self_description) descEl.textContent = p.llm_self_description;
 
   // Topical fingerprint
   const topicsEl = $('#topics-chart');
   if (topicsEl && p.topical_fingerprint?.top_tags) {
     const tags = Object.entries(p.topical_fingerprint.top_tags)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 8);
+      .sort((a, b) => b[1] - a[1]).slice(0, 8);
     const max = tags[0]?.[1] || 1;
-
     topicsEl.innerHTML = tags.map(([tag, count]) => `
       <div class="topic-row">
-        <div class="topic-label-row">
-          <span class="topic-name">${escapeHtml(tag)}</span>
-          <span class="topic-count">${count}</span>
-        </div>
-        <div class="topic-bar-bg">
-          <div class="topic-bar-fill" data-pct="${(count / max * 100).toFixed(1)}"></div>
-        </div>
+        <div class="topic-label-row"><span class="topic-name">${escapeHtml(tag)}</span><span class="topic-count">${count}</span></div>
+        <div class="topic-bar-bg"><div class="topic-bar-fill" data-pct="${(count / max * 100).toFixed(1)}"></div></div>
       </div>
     `).join('');
-
-    // Animate bars after paint
-    requestAnimationFrame(() => {
-      $$('.topic-bar-fill').forEach(bar => {
-        bar.style.width = bar.dataset.pct + '%';
-      });
-    });
+    requestAnimationFrame(() => { $$('.topic-bar-fill').forEach(bar => { bar.style.width = bar.dataset.pct + '%'; }); });
   }
 
   // Stance map
@@ -794,18 +671,89 @@ function initProfile() {
         <div class="stance-text">${escapeHtml(stance)}</div>
       </div>
     `).join('');
+
+    // --- STYLISTIC DNA (WITH DEEP DIVE TOGGLE) ---
+    if (p.stylistic_markers && p.argument_patterns) {
+      const styleContainer = document.createElement('div');
+      styleContainer.className = 'profile-section';
+      styleContainer.style.marginTop = '40px';
+      
+      const args = Object.entries(p.argument_patterns).sort((a, b) => b[1] - a[1]);
+      const topArgs = args.slice(0, 3).map(a => a[0].replace(/_/g, ' '));
+      
+      // Format Intellectual Lineage
+      const lineage = p.intellectual_lineage?.cited_figures || {};
+      const topCited = Object.entries(lineage).slice(0, 6).map(x => x[0]).join('<span style="color:#6b7280;"> · </span>') || 'No citations detected';
+
+      // Format Punctuation
+      const punct = p.stylistic_markers.punctuation_style || {};
+      const punctList = Object.entries(punct).map(([k,v]) => `${k.replace('uses_', '').replace('_', ' ')}: <span style="color:#fff">${v}</span>`).join('<br>');
+
+      styleContainer.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px;">
+          <h3 style="color: #c8a86b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Stylistic & Argument DNA</h3>
+          <button id="btn-deep-dna" style="background: none; border: 1px solid rgba(255,255,255,0.2); color: #a0aabf; font-size: 11px; padding: 4px 10px; border-radius: 4px; cursor: pointer; text-transform: uppercase;">Expand Deep Data ↴</button>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; color: #a0aabf; font-size: 14px;">
+          <div>
+            <strong>Rhythm & Vocabulary</strong><br>
+            <span style="color: #fff;">Sentence length:</span> ${p.stylistic_markers.avg_sentence_length || '?'} words avg<br>
+            <span style="color: #fff;">Word length:</span> ${p.stylistic_markers.avg_word_length || '?'} chars avg<br>
+            <span style="color: #fff;">Lexical richness:</span> ${((p.stylistic_markers.vocabulary_richness || 0) * 100).toFixed(1)}% unique
+          </div>
+          <div>
+            <strong>Dominant Logical Structures</strong><br>
+            <span style="color: #fff;">1.</span> ${topArgs[0] || 'N/A'}<br>
+            <span style="color: #fff;">2.</span> ${topArgs[1] || 'N/A'}<br>
+            <span style="color: #fff;">3.</span> ${topArgs[2] || 'N/A'}
+          </div>
+        </div>
+
+        <div id="deep-dna-panel" style="display: none; margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(255,255,255,0.15); font-size: 13px; color: #a0aabf;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            
+            <div>
+              <strong style="color: #6577a8; display: block; margin-bottom: 6px;">Intellectual Lineage</strong>
+              <div style="margin-bottom: 15px; color: #e0e0e0;">${topCited}</div>
+              
+              <strong style="color: #6577a8; display: block; margin-bottom: 6px;">Punctuation Habits</strong>
+              <div style="color: #a0aabf;">${punctList || 'Not enough data'}</div>
+            </div>
+
+            <div>
+              <strong style="color: #6577a8; display: block; margin-bottom: 6px;">Complete Logical Topology</strong>
+              ${args.map(([name, val]) => `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span>${name.replace(/_/g, ' ')}</span>
+                  <span style="color: #fff;">${(val * 100).toFixed(1)}%</span>
+                </div>
+              `).join('')}
+            </div>
+
+          </div>
+        </div>
+      `;
+      stancesEl.parentNode.appendChild(styleContainer);
+
+      // Add toggle logic
+      document.getElementById('btn-deep-dna').addEventListener('click', function() {
+        const panel = document.getElementById('deep-dna-panel');
+        if (panel.style.display === 'none') {
+          panel.style.display = 'block';
+          this.innerHTML = 'Hide Deep Data ↰';
+          this.style.color = '#c8a86b';
+          this.style.borderColor = 'rgba(200,168,107,0.4)';
+        } else {
+          panel.style.display = 'none';
+          this.innerHTML = 'Expand Deep Data ↴';
+          this.style.color = '#a0aabf';
+          this.style.borderColor = 'rgba(255,255,255,0.2)';
+        }
+      });
+    }
   }
 }
-
-/* Update graph meta text if graph already built with demo data */
-function refreshGraphMeta() {
-  const g = State.graph;
-  const metaEl = $('#graph-meta');
-  if (metaEl && g) {
-    metaEl.textContent = `${g.nodes?.length ?? 0} nodes · ${g.links?.length ?? 0} edges`;
-  }
-}
-
 /* ── Bootstrap ─────────────────────────────────────────────── */
 async function bootstrap() {
   // Fetch all data in parallel
@@ -820,21 +768,18 @@ async function bootstrap() {
   State.graph   = graphRaw   || makeDemoGraph();
   State.persona = personaRaw || makeDemoPersona();
 
-  // If active view is waiting for data, re-init (never reset brainInitialized —
-  // that would add a second event listener to the freeze button)
+  // If active view is waiting for data, re-init
   const v = State.activeView;
   if (v === 'about')   initAbout();
   if (v === 'garden')  { gardenInitialized = false; initGarden(); setupGardenControls(); }
-  if (v === 'brain')   { if (!brainInitialized) initBrain(); else refreshGraphMeta(); }
+  if (v === 'brain')   { brainInitialized = false; initBrain(); }
   if (v === 'profile') { profileInitialized = false; initProfile(); }
 }
 
 /* ── Init ──────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   initNavScroll();
-  initRouter: {
-    initRouting();
-  }
+  initRouting();
   initReader();
   bootstrap();
 });
