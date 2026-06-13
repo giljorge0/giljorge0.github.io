@@ -1,0 +1,465 @@
+{
+  "generated_at": "2026-06-13T23:46:43.534614",
+  "corpus": {
+    "total_notes": 51259,
+    "total_words": 5369993,
+    "total_edges": 16447572,
+    "edge_types": {
+      "tag": 16447004,
+      "explicit": 568
+    }
+  },
+  "sources": {
+    "by_type": {
+      "llm_chat": {
+        "notes": 18836,
+        "words": 4529836
+      },
+      "youtube_watch": {
+        "notes": 11500,
+        "words": 173615
+      },
+      "youtube_search": {
+        "notes": 9047,
+        "words": 65613
+      },
+      "browser_history": {
+        "notes": 7974,
+        "words": 76357
+      },
+      "heading": {
+        "notes": 3551,
+        "words": 422353
+      },
+      "pdf_chunk": {
+        "notes": 299,
+        "words": 89175
+      },
+      "pdf_parent": {
+        "notes": 30,
+        "words": 180
+      },
+      "wiki_page": {
+        "notes": 19,
+        "words": 6791
+      },
+      "web_clip": {
+        "notes": 3,
+        "words": 6073
+      }
+    },
+    "provenance": {
+      "output": {
+        "notes": 21973,
+        "words": 991034
+      },
+      "input": {
+        "notes": 29286,
+        "words": 4378959
+      }
+    }
+  },
+  "llm": {
+    "total_messages": 18836,
+    "total_conversations": 3178,
+    "user_prompts": 8136,
+    "assistant_responses": 9480,
+    "words_by_role": {
+      "user": 409934,
+      "assistant": 4033559
+    },
+    "by_platform": {
+      "chatgpt": 16482,
+      "claude": 2354
+    },
+    "monthly": {
+      "2022-12": 323,
+      "2023-01": 67,
+      "2023-02": 52,
+      "2023-03": 36,
+      "2023-05": 26,
+      "2023-06": 88,
+      "2023-07": 38,
+      "2023-08": 130,
+      "2023-09": 68,
+      "2023-10": 105,
+      "2023-11": 140,
+      "2023-12": 921,
+      "2024-01": 344,
+      "2024-02": 118,
+      "2024-03": 197,
+      "2024-04": 239,
+      "2024-05": 253,
+      "2024-06": 472,
+      "2024-07": 124,
+      "2024-08": 244,
+      "2024-09": 693,
+      "2024-10": 874,
+      "2024-11": 237,
+      "2024-12": 292,
+      "2025-01": 456,
+      "2025-02": 825,
+      "2025-03": 43,
+      "2025-04": 294,
+      "2025-05": 370,
+      "2025-06": 644,
+      "2025-07": 627,
+      "2025-08": 1120,
+      "2025-09": 1031,
+      "2025-10": 1294,
+      "2025-11": 783,
+      "2025-12": 615,
+      "2026-01": 915,
+      "2026-02": 831,
+      "2026-03": 1985,
+      "2026-04": 868,
+      "2026-05": 54
+    }
+  },
+  "temporal": {
+    "monthly_notes": {
+      "2022-12": 323,
+      "2023-01": 227,
+      "2023-02": 222,
+      "2023-03": 198,
+      "2023-04": 20,
+      "2023-05": 84,
+      "2023-06": 131,
+      "2023-07": 50,
+      "2023-08": 133,
+      "2023-09": 73,
+      "2023-10": 107,
+      "2023-11": 142,
+      "2023-12": 922,
+      "2024-01": 351,
+      "2024-02": 118,
+      "2024-03": 197,
+      "2024-04": 239,
+      "2024-05": 267,
+      "2024-06": 486,
+      "2024-07": 125,
+      "2024-08": 248,
+      "2024-09": 902,
+      "2024-10": 1050,
+      "2024-11": 738,
+      "2024-12": 623,
+      "2025-01": 1110,
+      "2025-02": 1232,
+      "2025-03": 1701,
+      "2025-04": 1559,
+      "2025-05": 1492,
+      "2025-06": 2142,
+      "2025-07": 1514,
+      "2025-08": 3224,
+      "2025-09": 3157,
+      "2025-10": 2962,
+      "2025-11": 2094,
+      "2025-12": 2229,
+      "2026-01": 3127,
+      "2026-02": 3211,
+      "2026-03": 5243,
+      "2026-04": 3104,
+      "2026-05": 628
+    }
+  },
+  "tags": {
+    "top_30": {
+      "youtube": 20547,
+      "watched": 11501,
+      "search": 9048,
+      "browser_history": 7975,
+      "Philosophy": 1563,
+      "Life": 1236,
+      "pdf_chunk": 300,
+      "essay_argument": 300,
+      "Technology": 232,
+      "AI": 141,
+      "Physics": 99,
+      "Writing": 96,
+      "Business": 84,
+      "Math": 75,
+      "pdf_parent": 31,
+      "book": 31,
+      "document": 30,
+      "wiki_page": 19,
+      "Literature": 12,
+      "Science": 6,
+      "Social": 6,
+      "business": 1,
+      "declan_mckenna": 1,
+      "life": 1,
+      "literature": 1,
+      "math": 1,
+      "philosophy": 1,
+      "physics": 1,
+      "science": 1,
+      "social": 1
+    }
+  },
+  "clusters": [
+    {
+      "id": 2356,
+      "size": 10700,
+      "sample_titles": [
+        "Declan McKenna - Isombard (FIFA 17 Official Soundtrack)",
+        "Catfish And The Bottlemen - Postpone (Lyrics)",
+        "AI Is Coming For Scientists’ Jobs. Seriously."
+      ]
+    },
+    {
+      "id": 2359,
+      "size": 9047,
+      "sample_titles": [
+        "YouTube search: leon marchand francais",
+        "YouTube search: weight room loud crowd cheering lift",
+        "YouTube search: Watched 84 - YT MOBILE   Desafio - Jornada+ 2023"
+      ]
+    },
+    {
+      "id": 2360,
+      "size": 7974,
+      "sample_titles": [
+        "Web: Publications - PEPR IA FOUNDRY",
+        "Web: Pre-class Quiz 3 | Advanced Statistics and Information Theory | Mathematics for Machine Learning | M",
+        "Web: Shokz Official - Open Ear Headphones & Bone Conduction Headphones"
+      ]
+    },
+    {
+      "id": 2361,
+      "size": 1563,
+      "sample_titles": [
+        "Ecce Homo: The World as a Reflexive Matrix",
+        "Thus Spoke Zarathustra- Enslaved by Everything to Be Enslaved by Nothing",
+        "What is Life With Mind and Matter and Autobiographical Sketches- Natural Selection Acts on Itself"
+      ]
+    },
+    {
+      "id": 2366,
+      "size": 1236,
+      "sample_titles": [
+        "Thus Spoke Zarathustra- Playful Spirits of Youth",
+        "Thus Spoke Zarathustra- Make Moves Forever, Not Just Big Moves",
+        "application of the bet in AI systems"
+      ]
+    },
+    {
+      "id": 2357,
+      "size": 462,
+      "sample_titles": [
+        "The GOAT the UFC Fumbled: Fedor Emelianenko",
+        "So I Tried Ketamine… | Bryan Johnson Podcast",
+        "This Stanford class exposes why you're behind on AI"
+      ]
+    },
+    {
+      "id": 2354,
+      "size": 338,
+      "sample_titles": [
+        "Viewed Ads On YouTube Homepage",
+        "The ENTIRE Story of the Trojan War Explained | Best Iliad Documentary",
+        "CLASSICS EXPLAINED: Virgil's AENEID"
+      ]
+    },
+    {
+      "id": 2375,
+      "size": 329,
+      "sample_titles": [
+        "Caos (Part 34/92)",
+        "Caos (Part 80/92)",
+        "Metamorphosis 1 (Part 3/4)"
+      ]
+    },
+    {
+      "id": 2367,
+      "size": 232,
+      "sample_titles": [
+        "Thus Spoke Zarathustra- The Master's Game and Hierarchical Emergence",
+        "transformations on the world model",
+        "High Bandwidth, Searching Vast Spaces, and Long Term Vision"
+      ]
+    },
+    {
+      "id": 2362,
+      "size": 141,
+      "sample_titles": [
+        "the implicit unsupervised learning for superhuman social performance",
+        "informed vs informing",
+        "Clarity in AI collaboration"
+      ]
+    },
+    {
+      "id": 2365,
+      "size": 99,
+      "sample_titles": [
+        "midnight physics",
+        "fundamental physics",
+        "the unstoppable force against the immovable object"
+      ]
+    },
+    {
+      "id": 2364,
+      "size": 96,
+      "sample_titles": [
+        "partitioning ideas",
+        "save now use later, ideas",
+        "Ecce Homo: Meta-Reflection on Capturing Thoughts"
+      ]
+    },
+    {
+      "id": 2371,
+      "size": 84,
+      "sample_titles": [
+        "you must finish the job",
+        "social media of ideas",
+        "The Power of the Capital"
+      ]
+    },
+    {
+      "id": 2363,
+      "size": 75,
+      "sample_titles": [
+        "The Selfish Gene: Evolutionary Game Theory and Unpredictability",
+        "value integral and derivative, depth first breadth first",
+        "Alex in Numberland: Logarithmic Perception and Exponential Growth"
+      ]
+    },
+    {
+      "id": 2369,
+      "size": 12,
+      "sample_titles": [
+        "O Alienista: A Ciência Acima de Tudo e a Casa Verde",
+        "O Alienista: O Perfeito Desequilíbrio e o Cativeiro de Si Próprio",
+        "O Alienista: A Expansão da Loucura e a Revolta dos Barbeiros"
+      ]
+    },
+    {
+      "id": 2368,
+      "size": 6,
+      "sample_titles": [
+        "The Meaning of It All: The Atomic Hypothesis and Fundamental Truths",
+        "The Unabomber Manifesto: Science as a Surrogate Activity",
+        "The Meaning of It All: The Atomic Hypothesis and Fundamental Truths"
+      ]
+    },
+    {
+      "id": 2370,
+      "size": 6,
+      "sample_titles": [
+        "Human, All Too Human: Winning People, Adapting, and the Ego of the Reader",
+        "Human, All Too Human: Selfless Revolutionaries and Reverse Psychology",
+        "Human, All Too Human: Winning People, Adapting, and the Ego of the Reader"
+      ]
+    },
+    {
+      "id": 0,
+      "size": 1,
+      "sample_titles": [
+        "How compound interest works [you]"
+      ]
+    },
+    {
+      "id": 1,
+      "size": 1,
+      "sample_titles": [
+        "Modeling the Randomness of Nuclear Decay [you]"
+      ]
+    },
+    {
+      "id": 2,
+      "size": 1,
+      "sample_titles": [
+        "Modeling the Randomness of Nuclear Decay [claude]"
+      ]
+    }
+  ],
+  "highlights": [
+    {
+      "title": "YouTube search: leon marchand francais",
+      "centrality": 0.024617,
+      "excerpt": "Searched YouTube for: leon marchand francais…",
+      "word_count": 6,
+      "tags": [
+        "youtube",
+        "search"
+      ],
+      "source_type": "youtube_search"
+    },
+    {
+      "title": "YouTube search: weight room loud crowd cheering lift",
+      "centrality": 0.024617,
+      "excerpt": "Searched YouTube for: weight room loud crowd cheering lift…",
+      "word_count": 9,
+      "tags": [
+        "youtube",
+        "search"
+      ],
+      "source_type": "youtube_search"
+    },
+    {
+      "title": "YouTube search: Watched 84 - YT MOBILE   Desafio - Jornada+ 2023",
+      "centrality": 0.024617,
+      "excerpt": "Searched YouTube for: Watched 84 - YT MOBILE   Desafio - Jornada+ 2023…",
+      "word_count": 12,
+      "tags": [
+        "youtube",
+        "search"
+      ],
+      "source_type": "youtube_search"
+    },
+    {
+      "title": "YouTube search: baki  hd le meilleur streetlifter",
+      "centrality": 0.024616,
+      "excerpt": "Searched YouTube for: baki  hd le meilleur streetlifter…",
+      "word_count": 8,
+      "tags": [
+        "youtube",
+        "search"
+      ],
+      "source_type": "youtube_search"
+    },
+    {
+      "title": "YouTube search: ufc vegas 50 kahlil rountree octagon",
+      "centrality": 0.024616,
+      "excerpt": "Searched YouTube for: ufc vegas 50 kahlil rountree octagon…",
+      "word_count": 9,
+      "tags": [
+        "youtube",
+        "search"
+      ],
+      "source_type": "youtube_search"
+    },
+    {
+      "title": "YouTube search: jalen ramsey",
+      "centrality": 0.024616,
+      "excerpt": "Searched YouTube for: jalen ramsey…",
+      "word_count": 5,
+      "tags": [
+        "youtube",
+        "search"
+      ],
+      "source_type": "youtube_search"
+    },
+    {
+      "title": "YouTube search: best tango in the world",
+      "centrality": 0.024616,
+      "excerpt": "Searched YouTube for: best tango in the world…",
+      "word_count": 8,
+      "tags": [
+        "youtube",
+        "search"
+      ],
+      "source_type": "youtube_search"
+    },
+    {
+      "title": "YouTube search: wrestling + jiu jitsu for all purpose grappling",
+      "centrality": 0.024616,
+      "excerpt": "Searched YouTube for: wrestling + jiu jitsu for all purpose grappling…",
+      "word_count": 11,
+      "tags": [
+        "youtube",
+        "search"
+      ],
+      "source_type": "youtube_search"
+    }
+  ]
+}
