@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-13T23:46:43.534614",
+  "generated_at": "2026-06-14T12:16:48.550593",
   "corpus": {
     "total_notes": 51259,
     "total_words": 5369993,
@@ -69,51 +69,274 @@
       "assistant": 4033559
     },
     "by_platform": {
-      "chatgpt": 16482,
-      "claude": 2354
+      "ChatGPT": 16482,
+      "Claude": 2354
     },
-    "monthly": {
-      "2022-12": 323,
-      "2023-01": 67,
-      "2023-02": 52,
-      "2023-03": 36,
-      "2023-05": 26,
-      "2023-06": 88,
-      "2023-07": 38,
-      "2023-08": 130,
-      "2023-09": 68,
-      "2023-10": 105,
-      "2023-11": 140,
-      "2023-12": 921,
-      "2024-01": 344,
-      "2024-02": 118,
-      "2024-03": 197,
-      "2024-04": 239,
-      "2024-05": 253,
-      "2024-06": 472,
-      "2024-07": 124,
-      "2024-08": 244,
-      "2024-09": 693,
-      "2024-10": 874,
-      "2024-11": 237,
-      "2024-12": 292,
-      "2025-01": 456,
-      "2025-02": 825,
-      "2025-03": 43,
-      "2025-04": 294,
-      "2025-05": 370,
-      "2025-06": 644,
-      "2025-07": 627,
-      "2025-08": 1120,
-      "2025-09": 1031,
-      "2025-10": 1294,
-      "2025-11": 783,
-      "2025-12": 615,
-      "2026-01": 915,
-      "2026-02": 831,
-      "2026-03": 1985,
-      "2026-04": 868,
-      "2026-05": 54
+    "platforms": [
+      "ChatGPT",
+      "Claude"
+    ],
+    "monthly_stacked": {
+      "2022-12": {
+        "ChatGPT": 323,
+        "Claude": 0
+      },
+      "2023-01": {
+        "ChatGPT": 67,
+        "Claude": 0
+      },
+      "2023-02": {
+        "ChatGPT": 52,
+        "Claude": 0
+      },
+      "2023-03": {
+        "ChatGPT": 36,
+        "Claude": 0
+      },
+      "2023-05": {
+        "ChatGPT": 26,
+        "Claude": 0
+      },
+      "2023-06": {
+        "ChatGPT": 88,
+        "Claude": 0
+      },
+      "2023-07": {
+        "ChatGPT": 38,
+        "Claude": 0
+      },
+      "2023-08": {
+        "ChatGPT": 130,
+        "Claude": 0
+      },
+      "2023-09": {
+        "ChatGPT": 68,
+        "Claude": 0
+      },
+      "2023-10": {
+        "ChatGPT": 105,
+        "Claude": 0
+      },
+      "2023-11": {
+        "ChatGPT": 140,
+        "Claude": 0
+      },
+      "2023-12": {
+        "ChatGPT": 921,
+        "Claude": 0
+      },
+      "2024-01": {
+        "ChatGPT": 344,
+        "Claude": 0
+      },
+      "2024-02": {
+        "ChatGPT": 118,
+        "Claude": 0
+      },
+      "2024-03": {
+        "ChatGPT": 197,
+        "Claude": 0
+      },
+      "2024-04": {
+        "ChatGPT": 239,
+        "Claude": 0
+      },
+      "2024-05": {
+        "ChatGPT": 253,
+        "Claude": 0
+      },
+      "2024-06": {
+        "ChatGPT": 472,
+        "Claude": 0
+      },
+      "2024-07": {
+        "ChatGPT": 124,
+        "Claude": 0
+      },
+      "2024-08": {
+        "ChatGPT": 244,
+        "Claude": 0
+      },
+      "2024-09": {
+        "ChatGPT": 693,
+        "Claude": 0
+      },
+      "2024-10": {
+        "ChatGPT": 874,
+        "Claude": 0
+      },
+      "2024-11": {
+        "ChatGPT": 237,
+        "Claude": 0
+      },
+      "2024-12": {
+        "ChatGPT": 292,
+        "Claude": 0
+      },
+      "2025-01": {
+        "ChatGPT": 386,
+        "Claude": 70
+      },
+      "2025-02": {
+        "ChatGPT": 824,
+        "Claude": 1
+      },
+      "2025-03": {
+        "ChatGPT": 43,
+        "Claude": 0
+      },
+      "2025-04": {
+        "ChatGPT": 120,
+        "Claude": 174
+      },
+      "2025-05": {
+        "ChatGPT": 109,
+        "Claude": 261
+      },
+      "2025-06": {
+        "ChatGPT": 235,
+        "Claude": 409
+      },
+      "2025-07": {
+        "ChatGPT": 555,
+        "Claude": 72
+      },
+      "2025-08": {
+        "ChatGPT": 1074,
+        "Claude": 46
+      },
+      "2025-09": {
+        "ChatGPT": 977,
+        "Claude": 54
+      },
+      "2025-10": {
+        "ChatGPT": 1210,
+        "Claude": 84
+      },
+      "2025-11": {
+        "ChatGPT": 746,
+        "Claude": 37
+      },
+      "2025-12": {
+        "ChatGPT": 579,
+        "Claude": 36
+      },
+      "2026-01": {
+        "ChatGPT": 905,
+        "Claude": 10
+      },
+      "2026-02": {
+        "ChatGPT": 749,
+        "Claude": 82
+      },
+      "2026-03": {
+        "ChatGPT": 1235,
+        "Claude": 750
+      },
+      "2026-04": {
+        "ChatGPT": 646,
+        "Claude": 222
+      },
+      "2026-05": {
+        "ChatGPT": 8,
+        "Claude": 46
+      }
+    },
+    "rabbit_hole": {
+      "histogram": {
+        "1–2": 1576,
+        "3–5": 700,
+        "6–10": 549,
+        "11–20": 212,
+        "21–40": 105,
+        "41–80": 25,
+        "80+": 11
+      },
+      "total_conversations": 3178,
+      "median_turns": 3,
+      "max_turns": 276,
+      "longest": [
+        {
+          "title": "Parameter sweep strategy for multi-session project",
+          "turns": 276,
+          "platform": "Claude"
+        },
+        {
+          "title": "Modular statement of purpose for multiple masters programs",
+          "turns": 212,
+          "platform": "Claude"
+        },
+        {
+          "title": "Periodization For Strength Gains",
+          "turns": 186,
+          "platform": "ChatGPT"
+        },
+        {
+          "title": "Today's Date: December 10.",
+          "turns": 148,
+          "platform": "ChatGPT"
+        },
+        {
+          "title": "University Ranking for AI",
+          "turns": 133,
+          "platform": "ChatGPT"
+        },
+        {
+          "title": "Masters study options comparison",
+          "turns": 119,
+          "platform": "ChatGPT"
+        },
+        {
+          "title": "Variable Name Correction",
+          "turns": 112,
+          "platform": "ChatGPT"
+        },
+        {
+          "title": "Interval map procedure",
+          "turns": 108,
+          "platform": "ChatGPT"
+        },
+        {
+          "title": "ChatGPT Decision Making",
+          "turns": 106,
+          "platform": "ChatGPT"
+        },
+        {
+          "title": "Add Connection Error Fix",
+          "turns": 96,
+          "platform": "ChatGPT"
+        }
+      ]
+    },
+    "obsession_map": {
+      "source": "title_words",
+      "top_topics": {
+        "explanation": 214,
+        "lubuntu": 210,
+        "fix": 201,
+        "python": 160,
+        "issue": 146,
+        "code": 134,
+        "tips": 131,
+        "explained": 131,
+        "training": 124,
+        "setup": 119,
+        "function": 119,
+        "strength": 118,
+        "error": 118,
+        "comparison": 110,
+        "overview": 108,
+        "analysis": 107,
+        "masters": 95,
+        "periodization": 93,
+        "gains": 93,
+        "guide": 92,
+        "boot": 92,
+        "application": 90,
+        "interval": 86,
+        "map": 86,
+        "summary": 84
+      }
     }
   },
   "temporal": {
@@ -198,33 +421,6 @@
   },
   "clusters": [
     {
-      "id": 2356,
-      "size": 10700,
-      "sample_titles": [
-        "Declan McKenna - Isombard (FIFA 17 Official Soundtrack)",
-        "Catfish And The Bottlemen - Postpone (Lyrics)",
-        "AI Is Coming For Scientists’ Jobs. Seriously."
-      ]
-    },
-    {
-      "id": 2359,
-      "size": 9047,
-      "sample_titles": [
-        "YouTube search: leon marchand francais",
-        "YouTube search: weight room loud crowd cheering lift",
-        "YouTube search: Watched 84 - YT MOBILE   Desafio - Jornada+ 2023"
-      ]
-    },
-    {
-      "id": 2360,
-      "size": 7974,
-      "sample_titles": [
-        "Web: Publications - PEPR IA FOUNDRY",
-        "Web: Pre-class Quiz 3 | Advanced Statistics and Information Theory | Mathematics for Machine Learning | M",
-        "Web: Shokz Official - Open Ear Headphones & Bone Conduction Headphones"
-      ]
-    },
-    {
       "id": 2361,
       "size": 1563,
       "sample_titles": [
@@ -240,24 +436,6 @@
         "Thus Spoke Zarathustra- Playful Spirits of Youth",
         "Thus Spoke Zarathustra- Make Moves Forever, Not Just Big Moves",
         "application of the bet in AI systems"
-      ]
-    },
-    {
-      "id": 2357,
-      "size": 462,
-      "sample_titles": [
-        "The GOAT the UFC Fumbled: Fedor Emelianenko",
-        "So I Tried Ketamine… | Bryan Johnson Podcast",
-        "This Stanford class exposes why you're behind on AI"
-      ]
-    },
-    {
-      "id": 2354,
-      "size": 338,
-      "sample_titles": [
-        "Viewed Ads On YouTube Homepage",
-        "The ENTIRE Story of the Trojan War Explained | Best Iliad Documentary",
-        "CLASSICS EXPLAINED: Virgil's AENEID"
       ]
     },
     {
@@ -349,117 +527,88 @@
         "Human, All Too Human: Selfless Revolutionaries and Reverse Psychology",
         "Human, All Too Human: Winning People, Adapting, and the Ego of the Reader"
       ]
-    },
-    {
-      "id": 0,
-      "size": 1,
-      "sample_titles": [
-        "How compound interest works [you]"
-      ]
-    },
-    {
-      "id": 1,
-      "size": 1,
-      "sample_titles": [
-        "Modeling the Randomness of Nuclear Decay [you]"
-      ]
-    },
-    {
-      "id": 2,
-      "size": 1,
-      "sample_titles": [
-        "Modeling the Randomness of Nuclear Decay [claude]"
-      ]
     }
   ],
   "highlights": [
     {
-      "title": "YouTube search: leon marchand francais",
-      "centrality": 0.024617,
-      "excerpt": "Searched YouTube for: leon marchand francais…",
-      "word_count": 6,
+      "title": "Ecce Homo: The World as a Reflexive Matrix",
+      "centrality": 0.004255,
+      "excerpt": "People are afraid of the world, it's abusive from within.",
+      "word_count": 116,
       "tags": [
-        "youtube",
-        "search"
+        "Philosophy"
       ],
-      "source_type": "youtube_search"
+      "source_type": "heading"
     },
     {
-      "title": "YouTube search: weight room loud crowd cheering lift",
-      "centrality": 0.024617,
-      "excerpt": "Searched YouTube for: weight room loud crowd cheering lift…",
-      "word_count": 9,
+      "title": "Thus Spoke Zarathustra- Enslaved by Everything to Be Enslaved by Nothing",
+      "centrality": 0.004255,
+      "excerpt": "So the way out of slavery that we are all slaves to something is in the way also of being enslaved by everything so that you can no longer be enslaved by anything, so that the things that can enslave…",
+      "word_count": 64,
       "tags": [
-        "youtube",
-        "search"
+        "Philosophy"
       ],
-      "source_type": "youtube_search"
+      "source_type": "heading"
     },
     {
-      "title": "YouTube search: Watched 84 - YT MOBILE   Desafio - Jornada+ 2023",
-      "centrality": 0.024617,
-      "excerpt": "Searched YouTube for: Watched 84 - YT MOBILE   Desafio - Jornada+ 2023…",
-      "word_count": 12,
+      "title": "immortality again",
+      "centrality": 0.004255,
+      "excerpt": "The fallacy of immortality that then as I have describe descends into the fallacy of perfection comes from the notion that perfection is outside ourselves and we have to have more and more until we ha…",
+      "word_count": 75,
       "tags": [
-        "youtube",
-        "search"
+        "Philosophy"
       ],
-      "source_type": "youtube_search"
+      "source_type": "heading"
     },
     {
-      "title": "YouTube search: baki  hd le meilleur streetlifter",
-      "centrality": 0.024616,
-      "excerpt": "Searched YouTube for: baki  hd le meilleur streetlifter…",
-      "word_count": 8,
+      "title": "virtue is in the middle",
+      "centrality": 0.004255,
+      "excerpt": "That virtue is in tbe middle is almost necessary, alone on the argument that nothing is infinite, on an infinite domain taking the limit to the boundary many times isnt the best option, and so somehwe…",
+      "word_count": 50,
       "tags": [
-        "youtube",
-        "search"
+        "Philosophy"
       ],
-      "source_type": "youtube_search"
+      "source_type": "heading"
     },
     {
-      "title": "YouTube search: ufc vegas 50 kahlil rountree octagon",
-      "centrality": 0.024616,
-      "excerpt": "Searched YouTube for: ufc vegas 50 kahlil rountree octagon…",
-      "word_count": 9,
+      "title": "Human, All Too Human: Bound Spirits and the Separation from Virtues",
+      "centrality": 0.004255,
+      "excerpt": "That free spirits were bound spirits, that a great separation turned them otherwise; they were bound to the external things that served them, that were good.",
+      "word_count": 206,
       "tags": [
-        "youtube",
-        "search"
+        "Philosophy"
       ],
-      "source_type": "youtube_search"
+      "source_type": "heading"
     },
     {
-      "title": "YouTube search: jalen ramsey",
-      "centrality": 0.024616,
-      "excerpt": "Searched YouTube for: jalen ramsey…",
-      "word_count": 5,
+      "title": "Thus Spoke Zarathustra- Desiring Both Coherence and Self-Actualization",
+      "centrality": 0.004255,
+      "excerpt": "That one may desire both coherency and self actualization, that then one would find peace, owning both the model and reality, doing the right and having understood the reason to it.",
+      "word_count": 93,
       "tags": [
-        "youtube",
-        "search"
+        "Philosophy"
       ],
-      "source_type": "youtube_search"
+      "source_type": "heading"
     },
     {
-      "title": "YouTube search: best tango in the world",
-      "centrality": 0.024616,
-      "excerpt": "Searched YouTube for: best tango in the world…",
-      "word_count": 8,
+      "title": "Thus Spoke Zarathustra- Power as the Bestowing Virtue",
+      "centrality": 0.004255,
+      "excerpt": "Power it is the bestowing virtue.",
+      "word_count": 52,
       "tags": [
-        "youtube",
-        "search"
+        "Philosophy"
       ],
-      "source_type": "youtube_search"
+      "source_type": "heading"
     },
     {
-      "title": "YouTube search: wrestling + jiu jitsu for all purpose grappling",
-      "centrality": 0.024616,
-      "excerpt": "Searched YouTube for: wrestling + jiu jitsu for all purpose grappling…",
-      "word_count": 11,
+      "title": "Thus Spoke Zarathustra- Elevation and the Godlike Will",
+      "centrality": 0.003601,
+      "excerpt": "Think about it.",
+      "word_count": 87,
       "tags": [
-        "youtube",
-        "search"
+        "Philosophy"
       ],
-      "source_type": "youtube_search"
+      "source_type": "heading"
     }
   ]
 }

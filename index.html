@@ -71,7 +71,7 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
               Email
             </a>
-            <a href="cv_gil.pdf" class="link-pill link-pill--outline" download>
+            <a href="cvgil.pdf" class="link-pill link-pill--outline" download>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Up to date CV
             </a>
@@ -97,7 +97,6 @@
               <span class="counter-label">connections</span>
             </div>
           </div>
-          <div class="brain-pulse" id="brain-pulse" aria-label="Brain activity stats"></div>
         </div>
       </div>
 
@@ -135,13 +134,29 @@
           </div>
         </div>
 
-        <!-- Row 3: Monthly activity -->
+        <!-- Row 3: LLM Activity by platform (stacked) -->
         <div class="omni-card omni-card--wide" id="omni-temporal">
-          <h3 class="omni-card-title">Activity Over Time</h3>
+          <h3 class="omni-card-title">LLM Activity by Platform</h3>
+          <div class="omni-stacked-legend" id="omni-platform-legend"></div>
           <div class="omni-chart" id="omni-monthly-chart"></div>
         </div>
 
-        <!-- Row 4: Clusters + Top tags -->
+        <!-- Row 4: Rabbit Hole + Obsession Map -->
+        <div class="omni-grid-2">
+          <div class="omni-card" id="omni-rabbit-hole">
+            <h3 class="omni-card-title">Rabbit Hole Index</h3>
+            <p class="omni-card-sub" id="omni-rabbit-sub"></p>
+            <div class="omni-rabbit-chart" id="omni-rabbit-chart"></div>
+            <div class="omni-card-body" id="omni-rabbit-longest"></div>
+          </div>
+          <div class="omni-card" id="omni-obsession">
+            <h3 class="omni-card-title">The Obsession Map</h3>
+            <p class="omni-card-sub">What you ask LLMs about</p>
+            <div class="omni-card-body" id="omni-obsession-body"></div>
+          </div>
+        </div>
+
+        <!-- Row 5: Tags + Clusters -->
         <div class="omni-grid-2">
           <div class="omni-card" id="omni-tags">
             <h3 class="omni-card-title">Tag Landscape</h3>
@@ -153,7 +168,7 @@
           </div>
         </div>
 
-        <!-- Row 5: Hub ideas -->
+        <!-- Row 6: Hub ideas -->
         <div class="omni-card omni-card--wide" id="omni-highlights">
           <h3 class="omni-card-title">Hub Ideas — Highest Centrality Output Notes</h3>
           <div class="omni-card-body" id="omni-highlights-body"></div>

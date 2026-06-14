@@ -195,6 +195,7 @@ body::after {
   opacity: 0;
   transform: translateY(8px);
   min-height: calc(100dvh - var(--nav-h));
+  padding-top: var(--nav-h);
   transition: opacity var(--t-slow) var(--ease),
               transform var(--t-slow) var(--ease);
 }
@@ -208,11 +209,12 @@ body::after {
   inset: var(--nav-h) 0 0 0;
   min-height: unset;
   overflow: hidden;
+  padding-top: 0;
 }
 
 /* ── Section Header ───────────────────────────────────────── */
 .section-header {
-  padding: var(--space-8) var(--space-7) var(--space-6);
+  padding: var(--space-5) var(--space-7) var(--space-4);
   border-bottom: 1px solid var(--border);
 }
 .section-title {
@@ -1781,4 +1783,180 @@ body::after {
   .omni-counters { grid-template-columns: 1fr 1fr; }
   .omni-section { gap: var(--space-4); }
   .omni-card { padding: var(--space-4); }
+}
+
+/* ── Stacked LLM chart ───────────────────────────────────── */
+.omni-stacked-legend {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+}
+.omni-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.omni-legend-swatch {
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.omni-stacked-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: stretch;
+  gap: 1px;
+  min-width: 0;
+}
+
+.omni-stacked-seg {
+  width: 100%;
+  min-height: 0;
+  border-radius: 1px;
+  opacity: 0.8;
+  transition: opacity 150ms;
+}
+.omni-stacked-seg:hover { opacity: 1; }
+
+/* ── Rabbit Hole ─────────────────────────────────────────── */
+.omni-card-sub {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-3);
+  margin-bottom: var(--space-3);
+}
+
+.omni-rabbit-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  height: 100px;
+  margin-bottom: var(--space-4);
+}
+
+.omni-rabbit-bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.omni-rabbit-bar {
+  width: 100%;
+  min-height: 2px;
+  background: var(--gold);
+  border-radius: 2px 2px 0 0;
+  opacity: 0.7;
+  position: relative;
+}
+.omni-rabbit-bar:hover { opacity: 1; }
+
+.omni-rabbit-bar-count {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  color: var(--text-2);
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.omni-rabbit-bar-label {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  color: var(--text-3);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.omni-rabbit-stat {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  padding: var(--space-1) 0;
+  color: var(--text-3);
+}
+.omni-rabbit-stat-val { color: var(--text-1); }
+
+.omni-rabbit-thread {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.78rem;
+}
+.omni-rabbit-thread:last-child { border-bottom: none; }
+.omni-rabbit-thread-title {
+  color: var(--text-2);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: var(--space-3);
+}
+.omni-rabbit-thread-turns {
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  color: var(--gold);
+  white-space: nowrap;
+}
+.omni-rabbit-thread-platform {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--text-3);
+  margin-left: var(--space-2);
+}
+
+/* ── Obsession Map ───────────────────────────────────────── */
+.omni-obsession-bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.omni-obsession-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.omni-obsession-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-2);
+  min-width: 100px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.omni-obsession-bar-bg {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.omni-obsession-bar {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--gold);
+  transition: width 800ms var(--ease);
+  width: 0;
+}
+
+.omni-obsession-count {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--text-3);
+  min-width: 30px;
 }
