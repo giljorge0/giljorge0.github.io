@@ -290,7 +290,7 @@
       ['AI responses', fmtNum(s.llm.assistant_responses)],
     ];
     if (s.llm.words_by_role) {
-      rows.push(['Words you wrote', fmtNum(s.llm.words_by_role.user)]);
+      rows.push(['Words I wrote', fmtNum(s.llm.words_by_role.user)]);
       rows.push(['Words AI wrote', fmtNum(s.llm.words_by_role.assistant)]);
     }
     let html = rows.map(([l, v]) =>
