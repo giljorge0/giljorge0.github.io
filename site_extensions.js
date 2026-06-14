@@ -57,7 +57,7 @@
       .omni-highlight-meta{display:flex;gap:.75rem;flex-wrap:wrap}
       .omni-highlight-meta span{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:#60584c}
       .omni-highlight-centrality{color:#c8a86b!important}
-      .omni-rabbit-chart{display:flex;align-items:flex-end;gap:.5rem;height:100px;margin-bottom:1rem}
+      .omni-rabbit-chart{display:flex;align-items:flex-end;gap:.5rem;height:140px;margin:.5rem 0 1rem}
       .omni-rabbit-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:.25rem}
       .omni-rabbit-bar{width:100%;min-height:2px;background:#c8a86b;border-radius:2px 2px 0 0;opacity:.7}.omni-rabbit-bar:hover{opacity:1}
       .omni-rabbit-bar-count{font-family:'IBM Plex Mono',monospace;font-size:.52rem;color:#a09888;text-align:center;margin-bottom:2px}
@@ -84,7 +84,7 @@
   const PLATFORM_COLORS = {
     'ChatGPT': '#74aa9c',
     'Claude':  '#d4a574',
-    'DeepSeek': '#7c9ed4',
+    'DeepSeek': '#4d6bce',
     'Gemini':  '#8b7ec4',
     'Other':   '#888888',
   };
@@ -106,6 +106,10 @@
     'kindle_clipping': 'Kindle Highlights',
     'raw_file': 'Imported Files',
     'pdf_chunk': 'PDF Excerpts',
+    'pdf_parent': 'PDF Documents',
+    'wiki_page': 'Wiki Pages',
+    'web_clip': 'Web Clippings',
+    'other_internal': 'Other',
     'unknown': 'Other',
   };
   function sourceLabel(type) {

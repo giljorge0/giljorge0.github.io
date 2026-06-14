@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-14T12:16:48.550593",
+  "generated_at": "2026-06-14T12:58:34.805885",
   "corpus": {
     "total_notes": 51259,
     "total_words": 5369993,
@@ -39,13 +39,9 @@
         "notes": 30,
         "words": 180
       },
-      "wiki_page": {
-        "notes": 19,
-        "words": 6791
-      },
-      "web_clip": {
-        "notes": 3,
-        "words": 6073
+      "other_internal": {
+        "notes": 22,
+        "words": 12864
       }
     },
     "provenance": {
@@ -311,31 +307,31 @@
     "obsession_map": {
       "source": "title_words",
       "top_topics": {
-        "explanation": 214,
         "lubuntu": 210,
-        "fix": 201,
         "python": 160,
-        "issue": 146,
         "code": 134,
-        "tips": 131,
-        "explained": 131,
         "training": 124,
-        "setup": 119,
         "function": 119,
         "strength": 118,
-        "error": 118,
-        "comparison": 110,
-        "overview": 108,
-        "analysis": 107,
         "masters": 95,
         "periodization": 93,
         "gains": 93,
-        "guide": 92,
         "boot": 92,
         "application": 90,
         "interval": 86,
         "map": 86,
-        "summary": 84
+        "options": 83,
+        "install": 79,
+        "date": 76,
+        "ranking": 74,
+        "today": 74,
+        "december": 74,
+        "making": 73,
+        "university": 71,
+        "quantum": 68,
+        "calculation": 66,
+        "name": 66,
+        "formula": 66
       }
     }
   },
@@ -387,10 +383,6 @@
   },
   "tags": {
     "top_30": {
-      "youtube": 20547,
-      "watched": 11501,
-      "search": 9048,
-      "browser_history": 7975,
       "Philosophy": 1563,
       "Life": 1236,
       "pdf_chunk": 300,
@@ -403,20 +395,7 @@
       "Math": 75,
       "pdf_parent": 31,
       "book": 31,
-      "document": 30,
-      "wiki_page": 19,
-      "Literature": 12,
-      "Science": 6,
-      "Social": 6,
-      "business": 1,
-      "declan_mckenna": 1,
-      "life": 1,
-      "literature": 1,
-      "math": 1,
-      "philosophy": 1,
-      "physics": 1,
-      "science": 1,
-      "social": 1
+      "document": 30
     }
   },
   "clusters": [

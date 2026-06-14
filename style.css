@@ -1837,8 +1837,8 @@ body::after {
   display: flex;
   align-items: flex-end;
   gap: var(--space-2);
-  height: 100px;
-  margin-bottom: var(--space-4);
+  height: 140px;
+  margin: var(--space-2) 0 var(--space-4);
 }
 
 .omni-rabbit-bar-wrap {
