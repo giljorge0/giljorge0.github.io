@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-14T12:58:34.805885",
+  "generated_at": "2026-06-16T02:38:32.261802",
   "corpus": {
     "total_notes": 51259,
     "total_words": 5369993,
-    "total_edges": 16447572,
+    "total_edges": 16447755,
     "edge_types": {
       "tag": 16447004,
-      "explicit": 568
+      "explicit": 751
     }
   },
   "sources": {
@@ -400,8 +400,8 @@
   },
   "clusters": [
     {
-      "id": 2361,
-      "size": 1563,
+      "id": 2353,
+      "size": 1564,
       "sample_titles": [
         "Ecce Homo: The World as a Reflexive Matrix",
         "Thus Spoke Zarathustra- Enslaved by Everything to Be Enslaved by Nothing",
@@ -409,8 +409,8 @@
       ]
     },
     {
-      "id": 2366,
-      "size": 1236,
+      "id": 2358,
+      "size": 1237,
       "sample_titles": [
         "Thus Spoke Zarathustra- Playful Spirits of Youth",
         "Thus Spoke Zarathustra- Make Moves Forever, Not Just Big Moves",
@@ -418,8 +418,8 @@
       ]
     },
     {
-      "id": 2375,
-      "size": 329,
+      "id": 2365,
+      "size": 333,
       "sample_titles": [
         "Caos (Part 34/92)",
         "Caos (Part 80/92)",
@@ -427,8 +427,8 @@
       ]
     },
     {
-      "id": 2367,
-      "size": 232,
+      "id": 2359,
+      "size": 233,
       "sample_titles": [
         "Thus Spoke Zarathustra- The Master's Game and Hierarchical Emergence",
         "transformations on the world model",
@@ -436,7 +436,7 @@
       ]
     },
     {
-      "id": 2362,
+      "id": 2354,
       "size": 141,
       "sample_titles": [
         "the implicit unsupervised learning for superhuman social performance",
@@ -445,8 +445,8 @@
       ]
     },
     {
-      "id": 2365,
-      "size": 99,
+      "id": 2357,
+      "size": 100,
       "sample_titles": [
         "midnight physics",
         "fundamental physics",
@@ -454,8 +454,8 @@
       ]
     },
     {
-      "id": 2364,
-      "size": 96,
+      "id": 2356,
+      "size": 97,
       "sample_titles": [
         "partitioning ideas",
         "save now use later, ideas",
@@ -463,8 +463,8 @@
       ]
     },
     {
-      "id": 2371,
-      "size": 84,
+      "id": 2361,
+      "size": 85,
       "sample_titles": [
         "you must finish the job",
         "social media of ideas",
@@ -472,8 +472,8 @@
       ]
     },
     {
-      "id": 2363,
-      "size": 75,
+      "id": 2355,
+      "size": 76,
       "sample_titles": [
         "The Selfish Gene: Evolutionary Game Theory and Unpredictability",
         "value integral and derivative, depth first breadth first",
@@ -481,8 +481,8 @@
       ]
     },
     {
-      "id": 2369,
-      "size": 12,
+      "id": 2360,
+      "size": 13,
       "sample_titles": [
         "O Alienista: A Ciência Acima de Tudo e a Casa Verde",
         "O Alienista: O Perfeito Desequilíbrio e o Cativeiro de Si Próprio",
@@ -490,8 +490,8 @@
       ]
     },
     {
-      "id": 2368,
-      "size": 6,
+      "id": 104,
+      "size": 9,
       "sample_titles": [
         "The Meaning of It All: The Atomic Hypothesis and Fundamental Truths",
         "The Unabomber Manifesto: Science as a Surrogate Activity",
@@ -499,8 +499,8 @@
       ]
     },
     {
-      "id": 2370,
-      "size": 6,
+      "id": 172,
+      "size": 9,
       "sample_titles": [
         "Human, All Too Human: Winning People, Adapting, and the Ego of the Reader",
         "Human, All Too Human: Selfless Revolutionaries and Reverse Psychology",
@@ -581,7 +581,7 @@
     },
     {
       "title": "Thus Spoke Zarathustra- Elevation and the Godlike Will",
-      "centrality": 0.003601,
+      "centrality": 0.003602,
       "excerpt": "Think about it.",
       "word_count": 87,
       "tags": [
