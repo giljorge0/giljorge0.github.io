@@ -1,0 +1,202 @@
+{
+  "generated_at": "2026-06-13T12:00:00",
+  "corpus": {
+    "total_notes": 51253,
+    "total_words": 5312000,
+    "total_edges": 226400,
+    "edge_types": {
+      "semantic": 180200,
+      "tag": 32100,
+      "explicit": 8900,
+      "llm": 5200
+    }
+  },
+  "sources": {
+    "by_type": {
+      "llm_chat": { "notes": 18420, "words": 2140000 },
+      "roam_note": { "notes": 14200, "words": 1820000 },
+      "heading": { "notes": 8300, "words": 620000 },
+      "youtube_watch": { "notes": 4800, "words": 192000 },
+      "search_history": { "notes": 3100, "words": 93000 },
+      "kindle_clipping": { "notes": 1200, "words": 310000 },
+      "raw_file": { "notes": 1233, "words": 137000 }
+    },
+    "provenance": {
+      "output": { "notes": 24100, "words": 2680000 },
+      "input": { "notes": 27153, "words": 2632000 }
+    }
+  },
+  "llm": {
+    "total_messages": 18420,
+    "total_conversations": 1240,
+    "user_prompts": 8900,
+    "assistant_responses": 9520,
+    "words_by_role": {
+      "user": 890000,
+      "assistant": 1250000
+    },
+    "by_platform": {
+      "chatgpt": 10200,
+      "claude": 7800,
+      "unknown": 420
+    },
+    "monthly": {
+      "2024-03": 120,
+      "2024-04": 340,
+      "2024-05": 580,
+      "2024-06": 720,
+      "2024-07": 890,
+      "2024-08": 1100,
+      "2024-09": 1340,
+      "2024-10": 1520,
+      "2024-11": 1680,
+      "2024-12": 1400,
+      "2025-01": 1200,
+      "2025-02": 1350,
+      "2025-03": 1580,
+      "2025-04": 1720,
+      "2025-05": 1900,
+      "2025-06": 1100,
+      "2025-07": 920
+    }
+  },
+  "temporal": {
+    "monthly_notes": {
+      "2023-06": 200,
+      "2023-07": 340,
+      "2023-08": 420,
+      "2023-09": 580,
+      "2023-10": 720,
+      "2023-11": 890,
+      "2023-12": 1050,
+      "2024-01": 1200,
+      "2024-02": 1350,
+      "2024-03": 1580,
+      "2024-04": 1820,
+      "2024-05": 2100,
+      "2024-06": 2400,
+      "2024-07": 2800,
+      "2024-08": 3200,
+      "2024-09": 3600,
+      "2024-10": 4100,
+      "2024-11": 4500,
+      "2024-12": 3800,
+      "2025-01": 3200,
+      "2025-02": 3500,
+      "2025-03": 4200,
+      "2025-04": 4800,
+      "2025-05": 5100,
+      "2025-06": 3400
+    }
+  },
+  "tags": {
+    "top_30": {
+      "philosophy": 4200,
+      "epistemology": 3100,
+      "AI": 2800,
+      "consciousness": 2400,
+      "mathematics": 2100,
+      "information-theory": 1900,
+      "cognition": 1700,
+      "language": 1500,
+      "physics": 1300,
+      "ethics": 1200,
+      "neuroscience": 1100,
+      "cryptography": 980,
+      "engineering": 920,
+      "logic": 870,
+      "phenomenology": 810,
+      "probability": 760,
+      "graph-theory": 720,
+      "aesthetics": 680,
+      "biology": 640,
+      "stochastic-processes": 590,
+      "semiotics": 560,
+      "complexity": 520,
+      "signal-processing": 480,
+      "thermodynamics": 440,
+      "literary-criticism": 410,
+      "category-theory": 380,
+      "political-philosophy": 350,
+      "topology": 320,
+      "quantum-mechanics": 290,
+      "existentialism": 270
+    }
+  },
+  "clusters": [
+    { "id": 0, "size": 8200, "sample_titles": ["The hard problem as a category error", "Qualia cannot be reduced to functional roles", "Dennett vs Chalmers — where the real disagreement lies"] },
+    { "id": 1, "size": 6400, "sample_titles": ["Transformer attention as associative memory", "Why retrieval is not enough for knowledge systems", "Graph RAG vs flat RAG — empirical results"] },
+    { "id": 2, "size": 5100, "sample_titles": ["Shannon entropy as a measure of what we do not know", "Channel capacity under noise — the fundamental theorem", "Mutual information and sample complexity in learning"] },
+    { "id": 3, "size": 4300, "sample_titles": ["Brownian motion and the Girsanov theorem", "Itô calculus for continuous-time finance", "Measure-theoretic probability — why it matters"] },
+    { "id": 4, "size": 3800, "sample_titles": ["Pessoa and the dissolution of the self", "Baudrillard — the crime of reality's disappearance", "Writing as a form of thinking, not recording"] },
+    { "id": 5, "size": 3200, "sample_titles": ["Neuropixels probe architecture and channel layout", "Spike sorting with Kilosort4 — practical considerations", "Reward-responsive neurons as biological clocks"] },
+    { "id": 6, "size": 2900, "sample_titles": ["Post-quantum cryptography — lattice vs code-based", "Reed-Muller codes and their minimum distance", "The MLHC assumption and Mersenne primes"] },
+    { "id": 7, "size": 2400, "sample_titles": ["Emergent communication in referential games", "Discrete vs continuous channels — failure modes", "Universal language from multilingual embeddings"] }
+  ],
+  "highlights": [
+    {
+      "title": "The extended mind thesis and digital knowledge systems",
+      "centrality": 0.00342,
+      "excerpt": "If a notebook is part of the mind, then a knowledge graph with memory formation, maintenance, and gap detection is a stronger case for cognitive extension than any static tool.",
+      "word_count": 2400,
+      "tags": ["philosophy", "cognition", "extended-mind"],
+      "source_type": "roam_note"
+    },
+    {
+      "title": "Why retrieval is not enough",
+      "centrality": 0.00298,
+      "excerpt": "The architectural bet of this system is that personal knowledge needs memory formation, memory maintenance, gap detection, and generative synthesis — not just search.",
+      "word_count": 1800,
+      "tags": ["engineering", "AI", "knowledge-systems"],
+      "source_type": "roam_note"
+    },
+    {
+      "title": "Entropy as ignorance, not disorder",
+      "centrality": 0.00271,
+      "excerpt": "Lloyd's framing inverts the pedagogy: thermodynamics follows from information theory, not the reverse.",
+      "word_count": 1200,
+      "tags": ["information-theory", "thermodynamics", "physics"],
+      "source_type": "roam_note"
+    },
+    {
+      "title": "Discrete channels fail loudly, continuous channels fail silently",
+      "centrality": 0.00245,
+      "excerpt": "The central empirical finding: wrong-answer entropy rises monotonically with noise in discrete channels but stays flat in continuous ones.",
+      "word_count": 3200,
+      "tags": ["information-theory", "emergent-communication", "AI"],
+      "source_type": "roam_note"
+    },
+    {
+      "title": "The gap is the product",
+      "centrality": 0.00218,
+      "excerpt": "A recommendation system that optimises for intellectual growth treats the gap — not engagement — as the signal worth surfacing.",
+      "word_count": 900,
+      "tags": ["engineering", "epistemology", "design"],
+      "source_type": "roam_note"
+    },
+    {
+      "title": "Spike-sorted anchor units as a biological sync signal",
+      "centrality": 0.00195,
+      "excerpt": "When the hardware sync channel is flat, reward-responsive neurons that fire at a fixed latency after each event become the clock.",
+      "word_count": 2800,
+      "tags": ["neuroscience", "signal-processing", "engineering"],
+      "source_type": "roam_note"
+    },
+    {
+      "title": "Provenance over convenience",
+      "centrality": 0.00182,
+      "excerpt": "Every note knows its source, timestamp, confidence, and whether it is your output or external input.",
+      "word_count": 600,
+      "tags": ["engineering", "design", "epistemology"],
+      "source_type": "roam_note"
+    },
+    {
+      "title": "Languages partition concept space suboptimally",
+      "centrality": 0.00168,
+      "excerpt": "A speaker-count-weighted centroid vocabulary would lower the entry barrier for every native language while making untranslatable concepts explicit rather than silently lost.",
+      "word_count": 4100,
+      "tags": ["language", "AI", "semiotics"],
+      "source_type": "roam_note"
+    }
+  ]
+}

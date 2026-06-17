@@ -17,6 +17,7 @@ const State = {
   graphMineOnly: false,
   graphSim: null,
   graphZoom: null,
+  graphClusterMode: false,
   graphData: null,      // processed { nodes, links }
 };
 
@@ -492,6 +493,14 @@ function initBrain() {
     .force('charge', d3.forceManyBody().strength(-150))
     .force('center', d3.forceCenter(cx, cy))
     .force('collision', d3.forceCollide(12))
+    .force("clusterX", d3.forceX(d => {
+        if (!State.graphClusterMode) return cx;
+        return cx + (Math.cos((d.cluster || 0) * 0.5) * 300); 
+    }).strength(d => State.graphClusterMode ? 0.5 : 0.05))
+    .force("clusterY", d3.forceY(d => {
+        if (!State.graphClusterMode) return cy;
+        return cy + (Math.sin((d.cluster || 0) * 0.5) * 300);
+    }).strength(d => State.graphClusterMode ? 0.5 : 0.05))
     .alphaDecay(0.05); // Makes it settle faster
 
   sim.stop(); 
@@ -589,6 +598,34 @@ function initBrain() {
       nodeSel.classed('node--dimmed', false);
       linkSel.style('opacity', null);
     }
+  });
+
+  // Cluster Map Toggle
+  $('#btn-cluster')?.addEventListener('click', function() {
+    State.graphClusterMode = !State.graphClusterMode;
+    this.classList.toggle('active', State.graphClusterMode);
+    
+    if (State.graphClusterMode) {
+      this.style.color = '#c8a86b'; // Your cosmic gold
+      this.style.borderColor = 'rgba(200,168,107,0.4)';
+    } else {
+      this.style.color = '';
+      this.style.borderColor = '';
+    }
+    
+    // Automatically unfreeze the graph so the animation plays
+    if (State.graphFrozen) {
+      State.graphFrozen = false;
+      const btnF = $('#btn-freeze');
+      if (btnF) {
+        btnF.classList.remove('active');
+        btnF.innerHTML = '⏸ Freeze';
+      }
+    }
+    
+    // Unpin nodes and wake up physics
+    nodes.forEach(n => { n.fx = null; n.fy = null; });
+    sim.alpha(0.8).restart();
   });
 
   // Graph search — checks title (real data) and label (demo data)
